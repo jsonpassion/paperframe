@@ -428,7 +428,6 @@ function rr(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 function wrapText(ctx, text, x, y, maxW, lineH) {
-  // Split by explicit newlines first, then word-wrap each paragraph
   const paragraphs = text.split('\n');
   let lines = [];
   paragraphs.forEach(para => {
@@ -436,8 +435,22 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
     const words = para.split(' ');
     let line = '';
     words.forEach(w => {
-      const t = line + w + ' ';
-      ctx.measureText(t).width > maxW && line ? (lines.push(line.trim()), line = w + ' ') : (line = t);
+      // Break long words that exceed maxW by themselves
+      while (ctx.measureText(w).width > maxW) {
+        let cut = w.length - 1;
+        while (cut > 1 && ctx.measureText(w.slice(0, cut)).width > maxW) cut--;
+        const chunk = w.slice(0, cut);
+        if (line) { lines.push(line.trim()); line = ''; }
+        lines.push(chunk);
+        w = w.slice(cut);
+      }
+      const test = line + w + ' ';
+      if (ctx.measureText(test).width > maxW && line) {
+        lines.push(line.trim());
+        line = w + ' ';
+      } else {
+        line = test;
+      }
     });
     if (line.trim()) lines.push(line.trim());
   });
@@ -2460,14 +2473,26 @@ function draw() {
   const manualFs=parseInt(document.getElementById('f-fs-num').value);
   let fs = (manualFs>=14 && manualFs<=72) ? manualFs : 0;
 
-  // Count wrapped lines for a given font size
+  // Count wrapped lines for a given font size (mirrors wrapText logic)
   function countLines(sz){
     ctx.font=`bold ${sz}px monospace`;
     let lc=0;
     title.split('\n').forEach(para=>{
       if(!para.trim()){lc++;return;}
       const words=para.split(' '); let line='';
-      words.forEach(w=>{const tt=line+w+' ';ctx.measureText(tt).width>maxW&&line?(lc++,line=w+' '):(line=tt);});
+      words.forEach(w=>{
+        // char-level break for long words
+        while(ctx.measureText(w).width>maxW){
+          let cut=w.length-1;
+          while(cut>1&&ctx.measureText(w.slice(0,cut)).width>maxW)cut--;
+          if(line){lc++;line='';}
+          lc++;
+          w=w.slice(cut);
+        }
+        const tt=line+w+' ';
+        if(ctx.measureText(tt).width>maxW&&line){lc++;line=w+' ';}
+        else{line=tt;}
+      });
       if(line.trim())lc++;
     });
     return lc;
