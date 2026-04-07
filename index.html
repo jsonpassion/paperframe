@@ -249,8 +249,8 @@ input:focus, textarea:focus, select:focus { border-color: var(--ac); }
         <div class="field"><label>Pixel Art Label</label>
           <input type="text" id="f-label" value="Transformer">
         </div>
-        <div class="field"><label>Watermark Text</label>
-          <input type="text" id="f-wm-text" placeholder="PaperGoat">
+        <div class="field"><label>Branding</label>
+          <input type="text" id="f-wm-text" placeholder="PaperGoat" value="PaperGoat">
         </div>
       </div>
     </div>
@@ -329,6 +329,9 @@ input:focus, textarea:focus, select:focus { border-color: var(--ac); }
           <button class="wm-toggle on" id="wm-toggle" onclick="toggleWatermark()">
             <span class="wm-thumb"></span>
           </button>
+        </div>
+        <div class="field" id="wm-text-field"><label>Watermark Text</label>
+          <input type="text" id="f-wm-badge" value="PaperGoat by Jason" placeholder="PaperGoat by Jason">
         </div>
 
         <button class="btn btn-p btn-full" onclick="exportPNG()">↓ Export PNG</button>
@@ -3336,6 +3339,7 @@ function draw() {
   const subtitle= '';
   const pxLabel = document.getElementById('f-label').value  || 'Model';
   const brand   = document.getElementById('f-wm-text').value || 'PaperGoat';
+  const wmText  = document.getElementById('f-wm-badge').value || 'PaperGoat by Jason';
 
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = t.bg; ctx.fillRect(0,0,W,H);
@@ -3511,35 +3515,27 @@ function draw() {
   // PaperGoat Watermark
   if (ST.watermark) {
     const wmX = W - 18, wmY = H - 14;
-    const logoR = 18;
+
+    // Pill badge background (auto-width)
+    ctx.font='bold 11px monospace';
+    const badgeW = Math.max(120, ctx.measureText(wmText).width + 50), badgeH = 26, badgeX = wmX - badgeW, badgeY = wmY - badgeH;
 
     // Goat silhouette (pixel art)
-    const gx2 = wmX - 212, gy2 = wmY - 38;
+    const gx2 = badgeX - 32, gy2 = wmY - 38;
     const u = 3;
     const goatPixels = [
-      // head
       [4,0],[5,0],[4,1],[5,1],[6,1],[3,2],[4,2],[5,2],
-      // horn
-      [3,0],[2,0],[2,1],
-      // eye
-      [5,1],
-      // body
+      [3,0],[2,0],[2,1],[5,1],
       [2,3],[3,3],[4,3],[5,3],[6,3],[7,3],
       [2,4],[3,4],[4,4],[5,4],[6,4],[7,4],[8,4],
       [1,5],[2,5],[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],
-      // legs
-      [2,6],[3,6],[5,6],[6,6],
-      [2,7],[3,7],[5,7],[6,7],
-      [2,8],[6,8],
+      [2,6],[3,6],[5,6],[6,6],[2,7],[3,7],[5,7],[6,7],[2,8],[6,8],
     ];
     ctx.globalAlpha = 0.22;
     goatPixels.forEach(([px2,py2]) => {
       ctx.fillStyle = t.text;
       ctx.fillRect(gx2+px2*u, gy2+py2*u, u, u);
     });
-
-    // Pill badge background
-    const badgeW = 190, badgeH = 26, badgeX = wmX - badgeW, badgeY = wmY - badgeH;
     ctx.fillStyle = t.dark; ctx.globalAlpha = 0.52;
     rr(ctx, badgeX, badgeY, badgeW, badgeH, 13); ctx.fill();
     ctx.strokeStyle = t.accent; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.3;
@@ -3549,11 +3545,11 @@ function draw() {
     ctx.fillStyle = t.accent; ctx.globalAlpha = 0.75;
     ctx.beginPath(); ctx.arc(badgeX+20, badgeY+badgeH/2, 9, 0, Math.PI*2); ctx.fill();
     ctx.fillStyle = t.dark; ctx.globalAlpha = 0.9; ctx.font='bold 9px monospace'; ctx.textAlign='center';
-    ctx.fillText(brand.slice(0,2).toUpperCase(), badgeX+20, badgeY+badgeH*0.65);
+    ctx.fillText(wmText.slice(0,2).toUpperCase(), badgeX+20, badgeY+badgeH*0.65);
 
     // Text
     ctx.fillStyle = t.text; ctx.globalAlpha = 0.82; ctx.font='bold 11px monospace'; ctx.textAlign='left';
-    ctx.fillText(brand, badgeX+34, badgeY+badgeH*0.62);
+    ctx.fillText(wmText, badgeX+34, badgeY+badgeH*0.62);
 
     ctx.textAlign='left'; ctx.globalAlpha=1;
   }
@@ -3701,7 +3697,7 @@ buildColorEditor();
 buildArtGrid();
 draw();
 
-['f-title','f-label','f-wm-text'].forEach(id => {
+['f-title','f-label','f-wm-text','f-wm-badge'].forEach(id => {
   const el=document.getElementById(id);
   if(el) el.addEventListener('input', draw);
 });
