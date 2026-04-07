@@ -37,15 +37,19 @@ canvas#cv { width: 100%; display: block; border: 1px solid var(--bd); border-rad
   width: 270px; border-left: 1px solid var(--bd); overflow-y: auto;
   display: flex; flex-direction: column; flex-shrink: 0;
 }
-.sec { border-bottom: 1px solid var(--bd); padding: 12px 14px; }
-.sec h2 { font-size: 9px; color: var(--t3); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 9px; }
+.sec { border-bottom: 1px solid var(--bd); padding: 8px 12px; }
+.sec h2 { font-size: 9px; color: var(--t3); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 6px; }
+.sec.collapsed .sec-body { display: none; }
+.sec h2 { cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+.sec h2::after { content: '▾'; font-size: 8px; color: var(--t3); transition: transform 0.15s; }
+.sec.collapsed h2::after { transform: rotate(-90deg); }
 
-.field { margin-bottom: 8px; }
-.field label { font-size: 10px; color: var(--t2); display: block; margin-bottom: 3px; }
+.field { margin-bottom: 5px; }
+.field label { font-size: 10px; color: var(--t2); display: block; margin-bottom: 2px; }
 input[type=text], select {
   width: 100%; background: var(--s1); border: 1px solid var(--bd);
   border-radius: 4px; color: var(--tx); font-family: inherit;
-  font-size: 12px; padding: 6px 9px; outline: none; transition: border-color 0.15s;
+  font-size: 11px; padding: 5px 8px; outline: none; transition: border-color 0.15s;
 }
 input:focus, select:focus { border-color: var(--ac); }
 
@@ -71,7 +75,7 @@ input:focus, select:focus { border-color: var(--ac); }
 }
 
 /* Art grid */
-.art-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.art-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-height: 200px; overflow-y: auto; }
 .art-btn {
   aspect-ratio: 1; background: var(--s1); border: 1px solid var(--bd);
   border-radius: 4px; cursor: pointer; position: relative; overflow: hidden; padding: 0;
@@ -86,7 +90,7 @@ input:focus, select:focus { border-color: var(--ac); }
 .art-btn.on { border-width: 2px; }
 
 /* Theme grid */
-.theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.theme-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .th-btn {
   aspect-ratio: 1; border-radius: 6px; cursor: pointer;
   border: 2px solid transparent; transition: transform 0.1s, border-color 0.12s;
@@ -135,7 +139,7 @@ input:focus, select:focus { border-color: var(--ac); }
 }
 .wm-toggle.on .wm-thumb { transform: translateX(16px); }
 .rand-sec { background: linear-gradient(160deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06)); }
-.rand-desc { font-size: 10px; color: var(--t2); margin-bottom: 10px; line-height: 1.5; }
+.rand-desc { font-size: 9px; color: var(--t2); margin-bottom: 6px; line-height: 1.4; }
 .rand-checks {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;
 }
@@ -230,110 +234,119 @@ input:focus, select:focus { border-color: var(--ac); }
 
   <aside class="sidebar">
     <div class="sec">
-      <h2>Paper Info</h2>
-      <div class="field"><label>Main Title</label>
-        <input type="text" id="f-title" value="Attention Is All You Need">
-      </div>
-      <div class="field"><label>Subtitle / Tags</label>
-        <input type="text" id="f-sub" value="Transformer · NLP · Self-Attention">
-      </div>
-      <div class="field"><label>Pixel Art Label</label>
-        <input type="text" id="f-label" value="Transformer">
-      </div>
-      <div class="field"><label>Branding</label>
-        <input type="text" id="f-brand" value="paper-review.dev">
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Paper Info</h2>
+      <div class="sec-body">
+        <div class="field"><label>Main Title</label>
+          <input type="text" id="f-title" value="Attention Is All You Need">
+        </div>
+        <div class="field"><label>Pixel Art Label</label>
+          <input type="text" id="f-label" value="Transformer">
+        </div>
+        <div class="field"><label>Watermark Text</label>
+          <input type="text" id="f-wm-text" placeholder="PaperGoat">
+        </div>
       </div>
     </div>
 
     <div class="sec">
-      <h2>Pixel Art</h2>
-      <div class="art-search-wrap">
-        <span class="art-search-icon">⌕</span>
-        <input class="art-search" id="art-search" type="text" placeholder="search: bert, yolo, lora, clip...">
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Pixel Art</h2>
+      <div class="sec-body">
+        <div class="art-search-wrap">
+          <span class="art-search-icon">⌕</span>
+          <input class="art-search" id="art-search" type="text" placeholder="search: bert, yolo, lora, clip...">
+        </div>
+        <div class="art-grid" id="art-grid"></div>
       </div>
-      <div class="art-grid" id="art-grid"></div>
     </div>
 
     <div class="sec">
-      <h2>Color Theme</h2>
-      <div class="theme-grid" id="theme-grid"></div>
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Color Theme</h2>
+      <div class="sec-body">
+        <div class="theme-grid" id="theme-grid"></div>
+      </div>
     </div>
 
-    <div class="sec" id="sec-colors">
-      <h2>Custom Colors</h2>
-      <div class="theme-label">
-        <span id="cur-theme-name">Classic Blue</span>
-        <button class="btn-sm" onclick="resetToTheme()">↺ Reset</button>
+    <div class="sec collapsed" id="sec-colors">
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Custom Colors</h2>
+      <div class="sec-body">
+        <div class="theme-label">
+          <span id="cur-theme-name">Classic Blue</span>
+          <button class="btn-sm" onclick="resetToTheme()">↺ Reset</button>
+        </div>
+        <div class="color-rows" id="color-rows"></div>
       </div>
-      <div class="color-rows" id="color-rows"></div>
     </div>
 
     <div class="sec">
-      <h2>Layout & Style</h2>
-      <div class="row">
-        <div class="field"><label>Window Position</label>
-          <select id="f-winpos">
-            <option value="right">Right</option>
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-          </select>
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Layout & Style</h2>
+      <div class="sec-body">
+        <div class="row">
+          <div class="field"><label>Window Position</label>
+            <select id="f-winpos">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+            </select>
+          </div>
+          <div class="field"><label>BG Code Type</label>
+            <select id="f-code">
+              <option value="asm">Assembly x86</option>
+              <option value="py">Python/PyTorch</option>
+              <option value="hex">Hex Dump</option>
+              <option value="cuda">CUDA / C++</option>
+              <option value="math">Math Notation</option>
+            </select>
+          </div>
         </div>
-        <div class="field"><label>BG Code Type</label>
-          <select id="f-code">
-            <option value="asm">Assembly x86</option>
-            <option value="py">Python/PyTorch</option>
-            <option value="hex">Hex Dump</option>
-            <option value="cuda">CUDA / C++</option>
-            <option value="math">Math Notation</option>
-          </select>
+        <div class="row">
+          <div class="field"><label>Pixel Size</label>
+            <select id="f-pxsz">
+              <option value="7">7px fine</option>
+              <option value="11" selected>11px medium</option>
+              <option value="17">17px chunky</option>
+            </select>
+          </div>
+          <div class="field"><label>BG Density</label>
+            <select id="f-bgop">
+              <option value="0.15">Light</option>
+              <option value="0.27" selected>Medium</option>
+              <option value="0.45">Heavy</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Pixel Size</label>
-          <select id="f-pxsz">
-            <option value="7">7px fine</option>
-            <option value="11" selected>11px medium</option>
-            <option value="17">17px chunky</option>
-          </select>
-        </div>
-        <div class="field"><label>BG Density</label>
-          <select id="f-bgop">
-            <option value="0.15">Light</option>
-            <option value="0.27" selected>Medium</option>
-            <option value="0.45">Heavy</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn btn-p btn-full" onclick="exportPNG()">↓ Export PNG</button>
 
-      <div class="wm-row">
-        <div class="wm-info">
-          <span class="wm-label">PaperGoat Watermark</span>
-          <span class="wm-sub">papergoat.beehiiv.com</span>
+        <div class="wm-row">
+          <div class="wm-info">
+            <span class="wm-label">Watermark</span>
+          </div>
+          <button class="wm-toggle on" id="wm-toggle" onclick="toggleWatermark()">
+            <span class="wm-thumb"></span>
+          </button>
         </div>
-        <button class="wm-toggle on" id="wm-toggle" onclick="toggleWatermark()">
-          <span class="wm-thumb"></span>
-        </button>
+
+        <button class="btn btn-p btn-full" onclick="exportPNG()">↓ Export PNG</button>
       </div>
     </div>
 
     <div class="sec rand-sec">
-      <h2>Random Combo</h2>
-      <p class="rand-desc">테마 · 아트 · 레이아웃 전체를 한번에 랜덤 조합</p>
-      <div class="rand-checks">
-        <label class="rand-check"><input type="checkbox" id="rc-theme" checked> Theme</label>
-        <label class="rand-check"><input type="checkbox" id="rc-art" checked> Pixel Art</label>
-        <label class="rand-check"><input type="checkbox" id="rc-layout" checked> Layout</label>
-        <label class="rand-check"><input type="checkbox" id="rc-code" checked> BG Code</label>
-        <label class="rand-check"><input type="checkbox" id="rc-density" checked> Density</label>
-        <label class="rand-check"><input type="checkbox" id="rc-bg" checked> BG Seed</label>
+      <h2 onclick="this.parentElement.classList.toggle('collapsed')">Random Combo</h2>
+      <div class="sec-body">
+        <p class="rand-desc">테마 · 아트 · 레이아웃 전체를 한번에 랜덤 조합</p>
+        <div class="rand-checks">
+          <label class="rand-check"><input type="checkbox" id="rc-theme" checked> Theme</label>
+          <label class="rand-check"><input type="checkbox" id="rc-art" checked> Pixel Art</label>
+          <label class="rand-check"><input type="checkbox" id="rc-layout" checked> Layout</label>
+          <label class="rand-check"><input type="checkbox" id="rc-code" checked> BG Code</label>
+          <label class="rand-check"><input type="checkbox" id="rc-density" checked> Density</label>
+          <label class="rand-check"><input type="checkbox" id="rc-bg" checked> BG Seed</label>
+        </div>
+        <button class="btn rand-btn" onclick="randomCombo()">
+          <span class="rand-icon">⟳</span> Randomize All
+        </button>
+        <button class="btn rand-btn rand-btn-sm" onclick="randomCombo(true)">
+          Surprise Me!
+        </button>
       </div>
-      <button class="btn rand-btn" onclick="randomCombo()">
-        <span class="rand-icon">⟳</span> Randomize All
-      </button>
-      <button class="btn rand-btn rand-btn-sm" onclick="randomCombo(true)">
-        Surprise Me!
-      </button>
     </div>
   </aside>
 </main>
@@ -417,6 +430,372 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
   if (line.trim()) lines.push(line.trim());
   lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
   return lines.length;
+}
+
+// ─── PIXEL CHARACTER HELPER ────────────────────────────────
+// Draws a character from a pixel grid string array
+// Each char maps: .=transparent 0=outline(dark) 1=primary 2=secondary 3=accent 4=highlight 5=white
+function drawPixelChar(ctx, grid, x, y, w, h, palette) {
+  const rows=grid.length, cols=Math.max(...grid.map(r=>r.length));
+  const u=Math.floor(Math.min(w/cols, h/rows));
+  const ox=x+Math.floor((w-cols*u)/2), oy=y+Math.floor((h-rows*u)/2);
+  for(let r=0;r<rows;r++) for(let c=0;c<grid[r].length;c++){
+    const ch=grid[r][c]; if(ch==='.'||!palette[ch]) continue;
+    ctx.fillStyle=palette[ch]; ctx.globalAlpha=palette[ch+'a']||1;
+    ctx.fillRect(ox+c*u, oy+r*u, u, u);
+  }
+  ctx.globalAlpha=1;
+}
+
+// ─── HUMOROUS CHARACTER PIXEL ARTS ────────────────────────
+// Bert (Sesame Street) for BERT papers
+function artBertChar(ctx, x, y, w, h, t) {
+  const grid=[
+    '....0000000.....',
+    '...044444440....',
+    '...044444440....',
+    '..00000000000...',
+    '..01111111110...',
+    '..01111111110...',
+    '.001111111110..',
+    '.011111111110..',
+    '.011501115110..',
+    '.011000100010..',
+    '.011111111110..',
+    '.011100001110..',
+    '.011100001110..',
+    '.011100001110..',
+    '.011110001110..',
+    '.001111111100..',
+    '..00111111100..',
+    '..005555555500..',
+    '..055555555550..',
+    '..055555555550..',
+    '..055550055550..',
+    '..055550055550..',
+    '...0555005550...',
+    '...00000000000..',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#5a8c5a','2':t.bg2,'3':t.accent,'4':'#222','5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('BERT · Sesame Street Edition',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Stochastic Parrot for GPT/LLM papers
+function artParrot(ctx, x, y, w, h, t) {
+  const grid=[
+    '......0000......',
+    '.....033330.....',
+    '....03333330....',
+    '...0333333330...',
+    '..033333333330..',
+    '..033350033330..',
+    '..033300003330..',
+    '..033333333330..',
+    '..033333333300..',
+    '..033322223000..',
+    '..033222220440..',
+    '..033222200440..',
+    '..0332222004400.',
+    '..033222200.00..',
+    '..033111110.....',
+    '..031111111.....',
+    '..031111111.....',
+    '..031111111.....',
+    '..031111111.....',
+    '..031111111.....',
+    '..001101100.....',
+    '..0.0000.00.....',
+    '..0.0..0.0......',
+    '..000..000......',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#22c55e','2':'#facc15','3':'#ef4444','4':'#f97316','5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Stochastic Parrot · LLM',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Clippy for CLIP papers
+function artClippy(ctx, x, y, w, h, t) {
+  const grid=[
+    '......000.......',
+    '.....01110......',
+    '....011110......',
+    '....010010......',
+    '....010010......',
+    '....010.010.....',
+    '....010.010.....',
+    '....010.010.....',
+    '....010.010.....',
+    '....010010......',
+    '....011110......',
+    '....010010......',
+    '....010010......',
+    '....010.010.....',
+    '....01..010.....',
+    '....010.010.....',
+    '....010.010.....',
+    '....010010......',
+    '....010010......',
+    '..005500550.....',
+    '..050005000.....',
+    '..050005000.....',
+    '..005500550.....',
+    '................',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#94a3b8','2':t.accent,'3':t.win,'4':t.bg2,'5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Clippy · "Need help aligning?"',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Snake for Mamba/SSM papers
+function artSnakeChar(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '..000...........',
+    '.01110..........',
+    '.01510..........',
+    '.01110..........',
+    '..0110..........',
+    '...0110.........',
+    '....0110........',
+    '.....01100......',
+    '......01100.....',
+    '.......01100....',
+    '......01100.....',
+    '.....01100......',
+    '....0110........',
+    '...0110.........',
+    '..01100.........',
+    '.01100..........',
+    '.01100..........',
+    '..01100.........',
+    '...01100........',
+    '....01100.......',
+    '.....01100......',
+    '......01100.....',
+    '.......000......',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#16a34a','2':'#15803d','3':t.accent,'4':t.bg2,'5':'#facc15'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Black Mamba · O(n)',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Bob Ross for Diffusion/Generation papers
+function artBobRoss(ctx, x, y, w, h, t) {
+  const grid=[
+    '....0000000.....',
+    '...044444440....',
+    '..04444444440...',
+    '..04444444440...',
+    '.044444444440...',
+    '.044444444440...',
+    '..01111111110...',
+    '..01155511110...',
+    '..01100011010...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01110011110...',
+    '..01111111110...',
+    '...011111110....',
+    '..02222222220...',
+    '..02222222220...',
+    '..02222222220...',
+    '..022220222200..',
+    '..022220222233..',
+    '..022220222233..',
+    '..002220022233..',
+    '...0022002200...',
+    '...0000.0000....',
+    '...00....000....',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#b08968','2':'#3b82f6','3':'#ef4444','4':'#78350f','5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Happy Little Noise · Diffusion',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Detective/Sherlock for Chain-of-Thought / Reasoning
+function artDetective(ctx, x, y, w, h, t) {
+  const grid=[
+    '...000000000....',
+    '..04444444440...',
+    '.0444444444440..',
+    '.0444444444440..',
+    '..01111111110...',
+    '..01111111110...',
+    '..01155511510...',
+    '..01100010010...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01100000110...',
+    '...011111110....',
+    '..02222222220...',
+    '..02222222220...',
+    '..02255522220...',
+    '..02255522220...',
+    '..02222222220...',
+    '..022220022200..',
+    '..022220022200..',
+    '..002220022200..',
+    '...00220002200..',
+    '....000..000....',
+    '....00....00....',
+    '....000..000....',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#d4a574','2':'#92400e','3':t.accent,'4':'#4a2c12','5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Elementary · Chain of Thought',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Cat for VAE/Latent Space (cats = hello world of generative models)
+function artPixelCat(ctx, x, y, w, h, t) {
+  const grid=[
+    '.00..........00.',
+    '.010........010.',
+    '.0110......0110.',
+    '.01110....01110.',
+    '.011100000111.0.',
+    '.011111111110...',
+    '.011111111110...',
+    '.011551115510...',
+    '.011001110010...',
+    '.011111111110...',
+    '.011113311110...',
+    '.011111111110...',
+    '..01111111110...',
+    '..00111111100...',
+    '..02222222220...',
+    '..02222222220...',
+    '..02222222220...',
+    '..02222222220...',
+    '..02222222220...',
+    '..02220002220...',
+    '..00220.00220...',
+    '..0000..0000....',
+    '................',
+    '................',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#f97316','2':'#f97316','3':'#fca5a5','4':t.bg2,'5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Latent Cat · VAE',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Rocket for Scaling Laws
+function artRocket(ctx, x, y, w, h, t) {
+  const grid=[
+    '.......00.......',
+    '......0550......',
+    '......0550......',
+    '.....055550.....',
+    '.....055550.....',
+    '....0555550.....',
+    '....0555550.....',
+    '....0515150.....',
+    '....0555550.....',
+    '...05555550.....',
+    '...05555550.....',
+    '...05511550.....',
+    '...05500550.....',
+    '...05500550.....',
+    '..005500550.....',
+    '.0005555500.....',
+    '.030055550.0....',
+    '.033005500.30...',
+    '..0330000.330...',
+    '...033..0330....',
+    '...0330.0330....',
+    '....033.033.....',
+    '....03...03.....',
+    '.....0...0......',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#3b82f6','2':t.bg2,'3':'#ef4444','4':'#f97316','5':'#e2e8f0'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('To The Moon · Scaling Laws',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Goat for PaperGoat branding
+function artGoatChar(ctx, x, y, w, h, t) {
+  const grid=[
+    '00..........00..',
+    '010........010..',
+    '.010......010...',
+    '..010....010....',
+    '..0111001110....',
+    '..0111111110....',
+    '..0111111110....',
+    '..0115511510....',
+    '..0110011010....',
+    '..0111111110....',
+    '..0111111110....',
+    '..0111001110....',
+    '...01111110.....',
+    '..022222222200..',
+    '..022222222200..',
+    '..022222222200..',
+    '..022222222200..',
+    '..022222222200..',
+    '..022222222200..',
+    '..022000022000..',
+    '..020..0020.....',
+    '..020..0020.....',
+    '..000..0000.....',
+    '................',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#e2e8f0','2':'#94a3b8','3':t.accent,'4':t.bg2,'5':'#1e293b'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('PaperGoat · GOAT',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// Ninja for FlashAttention (speed)
+function artNinja(ctx, x, y, w, h, t) {
+  const grid=[
+    '....0000000.....',
+    '...044444440....',
+    '..04444444440...',
+    '..01111111110...',
+    '..01111111110...',
+    '000111551110000.',
+    '..01100001100...',
+    '..01111111110...',
+    '..00000000000...',
+    '...011111110....',
+    '..02222222220...',
+    '..02222222220...',
+    '.002222222220...',
+    '03022222222200..',
+    '03302222222200..',
+    '033302222220330.',
+    '.03302222203300.',
+    '..0302222203300.',
+    '..003022220330..',
+    '...002220.030...',
+    '...000220.00....',
+    '....00.00.......',
+    '....000000......',
+    '................',
+  ];
+  drawPixelChar(ctx, grid, x, y+h*0.02, w, h*0.78,
+    {'0':t.dark,'1':'#475569','2':'#334155','3':'#94a3b8','4':'#1e293b','5':'#fff'});
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.4; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Flash Ninja · O(N)',x+w/2,y+h*0.92);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
 }
 
 // ─── PIXEL ART FUNCTIONS ───────────────────────────────────
@@ -1524,6 +1903,17 @@ const ARTS = [
   {id:'flow',        name:'Flow Matching',  fn:artFlowMatch,    kw:['flow matching','rectified flow','stable diffusion 3','sd3','flux','ode','transport','optimal']},
   {id:'stylegan',    name:'StyleGAN',       fn:artStyleGAN,     kw:['stylegan','style based','gan','face synthesis','latent','w space','image generation','high resolution']},
   {id:'mamba',       name:'Mamba / SSM',    fn:artMamba,        kw:['mamba','ssm','state space','selective','linear time','o(n)','sequence model','alternative transformer']},
+  // ─── HUMOROUS CHARACTER ARTS ───
+  {id:'bert_char',   name:'Bert (Sesame)',  fn:artBertChar,     kw:['bert','mlm','sesame','pretrain','roberta','electra','bidirectional','masked']},
+  {id:'parrot',      name:'Stochastic Parrot', fn:artParrot,   kw:['gpt','llm','language model','generation','autoregressive','chatgpt','gpt-4','llama','gemini','claude']},
+  {id:'clippy',      name:'Clippy (CLIP)',  fn:artClippy,       kw:['clip','contrastive','multimodal','image text','vision language','zero-shot','vlm','alignment']},
+  {id:'snake_char',  name:'Mamba Snake',    fn:artSnakeChar,    kw:['mamba','ssm','state space','snake','selective','linear','sequence']},
+  {id:'bob_ross',    name:'Bob Ross',       fn:artBobRoss,      kw:['diffusion','generation','stable diffusion','imagen','dalle','denoising','art','creative','painting']},
+  {id:'detective',   name:'Detective',      fn:artDetective,    kw:['chain of thought','cot','reasoning','o1','deepseek-r1','think','step by step','tot']},
+  {id:'pixel_cat',   name:'Latent Cat',     fn:artPixelCat,     kw:['vae','autoencoder','latent','generation','cat','generative','reconstruction']},
+  {id:'rocket',      name:'Rocket',         fn:artRocket,       kw:['scaling laws','chinchilla','compute','parameters','bigger','emergent','growth','performance']},
+  {id:'goat',        name:'PaperGoat',      fn:artGoatChar,     kw:['papergoat','goat','digest','newsletter','review','paper']},
+  {id:'ninja',       name:'Flash Ninja',    fn:artNinja,        kw:['flashattention','flash attention','fast','efficient','kernel','optimization','speed','inference']},
 ].filter((a,i,arr)=>arr.findIndex(b=>b.id===a.id)===i); // dedupe
 
 // ─── STATE ─────────────────────────────────────────────────
@@ -1649,9 +2039,9 @@ function draw() {
   const pxSz    = parseInt(document.getElementById('f-pxsz').value);
   const bgOp    = parseFloat(document.getElementById('f-bgop').value);
   const title   = document.getElementById('f-title').value || 'Paper Title';
-  const subtitle= document.getElementById('f-sub').value   || 'Author · Venue';
+  const subtitle= '';
   const pxLabel = document.getElementById('f-label').value  || 'Model';
-  const brand   = document.getElementById('f-brand').value  || 'paper-review';
+  const brand   = document.getElementById('f-wm-text').value || 'PaperGoat';
 
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = t.bg; ctx.fillRect(0,0,W,H);
@@ -1718,48 +2108,68 @@ function draw() {
     }
   }
 
-  // Floating window
-  ctx.fillStyle=t.dark; ctx.globalAlpha=0.48; rr(ctx,wx+9,wy+9,ww,wh,12); ctx.fill(); ctx.globalAlpha=1;
-  ctx.fillStyle=t.win; rr(ctx,wx,wy,ww,wh,12); ctx.fill();
-  ctx.fillStyle=t.dark; ctx.globalAlpha=0.32;
-  ctx.beginPath(); ctx.moveTo(wx+12,wy); ctx.lineTo(wx+ww-12,wy);
-  ctx.quadraticCurveTo(wx+ww,wy,wx+ww,wy+12); ctx.lineTo(wx+ww,wy+40);
-  ctx.lineTo(wx,wy+40); ctx.lineTo(wx,wy+12); ctx.quadraticCurveTo(wx,wy,wx+12,wy);
-  ctx.closePath(); ctx.fill(); ctx.globalAlpha=1;
-  [['#ff5f57',20],['#febc2e',42],['#28c840',64]].forEach(([c,ox]) => {
-    ctx.fillStyle=c; ctx.beginPath(); ctx.arc(wx+ox,wy+20,8,0,Math.PI*2); ctx.fill();
+  // Floating window — pixel style (sharp corners, stepped shadow)
+  const pxU=4; // pixel unit for stepped edges
+  // Stepped pixel shadow
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.5;
+  ctx.fillRect(wx+pxU*2,wy+pxU*2,ww,wh);
+  ctx.fillRect(wx+pxU,wy+pxU,ww+pxU,wh+pxU);
+  ctx.globalAlpha=1;
+  // Main window body
+  ctx.fillStyle=t.win; ctx.fillRect(wx,wy,ww,wh);
+  // Pixel border
+  ctx.strokeStyle=t.accent; ctx.lineWidth=3; ctx.globalAlpha=0.35;
+  ctx.strokeRect(wx,wy,ww,wh); ctx.globalAlpha=1;
+  // Title bar
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.4; ctx.fillRect(wx,wy,ww,40); ctx.globalAlpha=1;
+  // Pixel traffic lights (squares instead of circles)
+  [['#ff5f57',12],['#febc2e',30],['#28c840',48]].forEach(([c,ox]) => {
+    ctx.fillStyle=c; ctx.fillRect(wx+ox,wy+13,14,14);
   });
-  ctx.fillStyle=t.text; ctx.globalAlpha=0.35; ctx.font='13px monospace';
-  ctx.fillText(brand, wx+88, wy+25); ctx.globalAlpha=1;
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.4; ctx.font='bold 13px monospace';
+  ctx.fillText(`> ${brand}`, wx+76, wy+26); ctx.globalAlpha=1;
+  // Scanline effect on window
+  ctx.globalAlpha=0.04;
+  for(let sy=wy+40;sy<wy+wh;sy+=4){ctx.fillStyle=sy%8===0?t.dark:t.text;ctx.fillRect(wx,sy,ww,1);}
+  ctx.globalAlpha=1;
 
-  // Title — auto-size to fit window, max 3 lines
+  // Title — auto-size, max 3 lines, bigger starting size
   ctx.fillStyle=t.text;
-  const pad=32, maxW=ww-pad*2;
-  const maxLines=3, availH=wh-120; // space between titlebar and footer
-  let fs=56; ctx.font=`bold ${fs}px monospace`;
-  // Shrink font until title fits within maxLines
-  while(fs>20){
+  const pad=28, maxW=ww-pad*2;
+  const maxLines=3, availH=wh-90;
+  let fs=68; ctx.font=`bold ${fs}px monospace`;
+  while(fs>22){
     ctx.font=`bold ${fs}px monospace`;
     const words=title.split(' '); let line='',lines=0;
-    words.forEach(w=>{const t=line+w+' ';ctx.measureText(t).width>maxW&&line?(lines++,line=w+' '):(line=t);});
+    words.forEach(w=>{const tt=line+w+' ';ctx.measureText(tt).width>maxW&&line?(lines++,line=w+' '):(line=tt);});
     if(line.trim())lines++;
-    if(lines<=maxLines && lines*fs*1.18+60<=availH) break;
+    if(lines<=maxLines && lines*fs*1.18+40<=availH) break;
     fs-=2;
   }
   ctx.font=`bold ${fs}px monospace`;
-  const tY=wy+78;
+  const tY=wy+72;
+  // Pixel shadow for title text (offset by 3px)
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.55;
+  wrapText(ctx,title,wx+pad+3,tY+3,maxW,fs*1.18);
+  // Main title text
+  ctx.fillStyle=t.text; ctx.globalAlpha=1;
+  ctx.font=`bold ${fs}px monospace`;
   const nLines=wrapText(ctx,title,wx+pad,tY,maxW,fs*1.18);
 
-  // Subtitle
-  ctx.fillStyle=t.accent; ctx.globalAlpha=0.85; ctx.font='17px monospace';
-  const sY=tY+nLines*fs*1.18+18; ctx.fillText(subtitle, wx+pad, sY); ctx.globalAlpha=1;
-  ctx.strokeStyle=t.accent; ctx.lineWidth=1; ctx.globalAlpha=0.22;
-  ctx.beginPath(); ctx.moveTo(wx+pad,sY+13); ctx.lineTo(wx+ww-pad,sY+13); ctx.stroke(); ctx.globalAlpha=1;
+  // Accent bar under title
+  const barY=tY+nLines*fs*1.18+12;
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.5;
+  ctx.fillRect(wx+pad, barY, 80, 4);
+  ctx.globalAlpha=1;
 
-  // Footer bar
-  ctx.fillStyle=t.dark; ctx.globalAlpha=0.28; ctx.fillRect(wx,wy+wh-48,ww,48); ctx.globalAlpha=1;
-  ctx.fillStyle=t.accent; ctx.globalAlpha=0.45; ctx.font='12px monospace';
-  ctx.fillText(`PAPER REVIEW  ·  ${ARTS[ST.art].name.toUpperCase()}  ·  ${brand.toUpperCase()}`, wx+pad, wy+wh-18);
+  // Footer bar — pixel style
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.35; ctx.fillRect(wx,wy+wh-44,ww,44); ctx.globalAlpha=1;
+  // Dithered top edge on footer
+  for(let dx=0;dx<ww;dx+=pxU){
+    if((dx/pxU)%2===0){ctx.fillStyle=t.dark;ctx.globalAlpha=0.2;ctx.fillRect(wx+dx,wy+wh-48,pxU,pxU);ctx.globalAlpha=1;}
+  }
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.55; ctx.font='bold 13px monospace';
+  ctx.fillText(`PAPER REVIEW  ·  ${ARTS[ST.art].name.toUpperCase()}  ·  ${brand.toUpperCase()}`, wx+pad, wy+wh-16);
   ctx.globalAlpha=1;
 
   // PaperGoat Watermark
@@ -1803,21 +2213,11 @@ function draw() {
     ctx.fillStyle = t.accent; ctx.globalAlpha = 0.75;
     ctx.beginPath(); ctx.arc(badgeX+20, badgeY+badgeH/2, 9, 0, Math.PI*2); ctx.fill();
     ctx.fillStyle = t.dark; ctx.globalAlpha = 0.9; ctx.font='bold 9px monospace'; ctx.textAlign='center';
-    ctx.fillText('PG', badgeX+20, badgeY+badgeH*0.65);
+    ctx.fillText(brand.slice(0,2).toUpperCase(), badgeX+20, badgeY+badgeH*0.65);
 
     // Text
     ctx.fillStyle = t.text; ctx.globalAlpha = 0.82; ctx.font='bold 11px monospace'; ctx.textAlign='left';
-    ctx.fillText('PaperGoat', badgeX+34, badgeY+badgeH*0.48);
-    ctx.fillStyle = t.accent; ctx.globalAlpha = 0.55; ctx.font='9px monospace';
-    ctx.fillText('Newsletter', badgeX+34, badgeY+badgeH*0.82);
-
-    // Separator dot
-    ctx.fillStyle = t.accent; ctx.globalAlpha = 0.4;
-    ctx.beginPath(); ctx.arc(badgeX+112, badgeY+badgeH/2, 2, 0, Math.PI*2); ctx.fill();
-
-    // URL
-    ctx.fillStyle = t.text; ctx.globalAlpha = 0.5; ctx.font='9px monospace';
-    ctx.fillText('papergoat.beehiiv.com', badgeX+120, badgeY+badgeH*0.64);
+    ctx.fillText(brand, badgeX+34, badgeY+badgeH*0.62);
 
     ctx.textAlign='left'; ctx.globalAlpha=1;
   }
@@ -1897,9 +2297,7 @@ function randBg() { ST.bgSeed=(Math.random()*999999)|0; draw(); }
 function copyJSON() {
   const cfg={
     title:document.getElementById('f-title').value,
-    subtitle:document.getElementById('f-sub').value,
     label:document.getElementById('f-label').value,
-    brand:document.getElementById('f-brand').value,
     theme:THEMES[ST.theme].id, art:ARTS[ST.art].id,
     code:document.getElementById('f-code').value,
     winPos:document.getElementById('f-winpos').value,
@@ -1967,9 +2365,13 @@ buildColorEditor();
 buildArtGrid();
 draw();
 
-['f-title','f-sub','f-label','f-brand','f-code','f-winpos','f-pxsz','f-bgop'].forEach(id => {
+['f-title','f-label','f-wm-text'].forEach(id => {
   const el=document.getElementById(id);
   if(el) el.addEventListener('input', draw);
+});
+['f-code','f-winpos','f-pxsz','f-bgop'].forEach(id => {
+  const el=document.getElementById(id);
+  if(el) { el.addEventListener('input', draw); el.addEventListener('change', draw); }
 });
 document.getElementById('art-search').addEventListener('input', e => buildArtGrid(e.target.value));
 </script>
