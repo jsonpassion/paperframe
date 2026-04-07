@@ -46,12 +46,13 @@ canvas#cv { width: 100%; display: block; border: 1px solid var(--bd); border-rad
 
 .field { margin-bottom: 5px; }
 .field label { font-size: 10px; color: var(--t2); display: block; margin-bottom: 2px; }
-input[type=text], select {
+input[type=text], input[type=number], textarea, select {
   width: 100%; background: var(--s1); border: 1px solid var(--bd);
   border-radius: 4px; color: var(--tx); font-family: inherit;
   font-size: 11px; padding: 5px 8px; outline: none; transition: border-color 0.15s;
+  box-sizing: border-box;
 }
-input:focus, select:focus { border-color: var(--ac); }
+input:focus, textarea:focus, select:focus { border-color: var(--ac); }
 
 .row { display: flex; gap: 8px; }
 .row .field { flex: 1; }
@@ -75,16 +76,16 @@ input:focus, select:focus { border-color: var(--ac); }
 }
 
 /* Art grid */
-.art-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-height: 200px; overflow-y: auto; }
+.art-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-height: 320px; overflow-y: auto; padding: 2px; }
 .art-btn {
-  aspect-ratio: 1; background: var(--s1); border: 1px solid var(--bd);
-  border-radius: 4px; cursor: pointer; position: relative; overflow: hidden; padding: 0;
+  display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--bd);
+  border-radius: 4px; cursor: pointer; overflow: hidden; padding: 0;
   transition: border-color 0.12s;
 }
-.art-btn canvas { width: 100%; height: 100%; display: block; }
+.art-btn canvas { width: 100%; aspect-ratio: 1; display: block; }
 .art-btn figcaption {
-  position: absolute; bottom: 0; left: 0; right: 0; font-size: 8px;
-  color: var(--t2); text-align: center; background: rgba(0,0,0,0.72); padding: 2px 1px;
+  font-size: 7px; line-height: 1.2; color: var(--t2); text-align: center;
+  background: rgba(0,0,0,0.72); padding: 2px 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .art-btn:hover, .art-btn.on { border-color: var(--ac2); }
 .art-btn.on { border-width: 2px; }
@@ -237,7 +238,13 @@ input:focus, select:focus { border-color: var(--ac); }
       <h2 onclick="this.parentElement.classList.toggle('collapsed')">Paper Info</h2>
       <div class="sec-body">
         <div class="field"><label>Main Title</label>
-          <input type="text" id="f-title" value="Attention Is All You Need">
+          <textarea id="f-title" rows="2" style="resize:vertical;min-height:32px">Attention Is All You Need</textarea>
+        </div>
+        <div class="field"><label>Font Size <span id="fs-val" style="color:var(--ac2)">auto</span></label>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="range" id="f-fs" min="0" max="72" value="0" style="flex:1">
+            <input type="number" id="f-fs-num" min="14" max="72" placeholder="auto" style="width:52px">
+          </div>
         </div>
         <div class="field"><label>Pixel Art Label</label>
           <input type="text" id="f-label" value="Transformer">
@@ -421,13 +428,19 @@ function rr(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 function wrapText(ctx, text, x, y, maxW, lineH) {
-  const words = text.split(' ');
-  let line = '', lines = [];
-  words.forEach(w => {
-    const t = line + w + ' ';
-    ctx.measureText(t).width > maxW && line ? (lines.push(line.trim()), line = w + ' ') : (line = t);
+  // Split by explicit newlines first, then word-wrap each paragraph
+  const paragraphs = text.split('\n');
+  let lines = [];
+  paragraphs.forEach(para => {
+    if (!para.trim()) { lines.push(''); return; }
+    const words = para.split(' ');
+    let line = '';
+    words.forEach(w => {
+      const t = line + w + ' ';
+      ctx.measureText(t).width > maxW && line ? (lines.push(line.trim()), line = w + ' ') : (line = t);
+    });
+    if (line.trim()) lines.push(line.trim());
   });
-  if (line.trim()) lines.push(line.trim());
   lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
   return lines.length;
 }
@@ -1861,6 +1874,298 @@ function artMamba(ctx, x, y, w, h, t) {
   ctx.textAlign='left'; ctx.globalAlpha=1;
 }
 
+// ─── Multimodal / VLM ──────────────────────────────────────
+function artMultimodal(ctx, x, y, w, h, t) {
+  // Image input box
+  const imgW=w*0.35, imgH=h*0.35, imgX=x+w*0.06, imgY=y+h*0.18;
+  ctx.fillStyle=t.win; ctx.globalAlpha=0.7; rr(ctx,imgX,imgY,imgW,imgH,5); ctx.fill();
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.6;
+  ctx.fillRect(imgX+imgW*0.15,imgY+imgH*0.25,imgW*0.7,imgH*0.3);
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.5; ctx.font=`${h*0.042}px monospace`; ctx.textAlign='center';
+  ctx.fillText('🖼 Image',imgX+imgW/2,imgY+imgH*0.85);
+  // Text input box
+  const txtW=w*0.35, txtH=h*0.35, txtX=x+w*0.06, txtY=y+h*0.58;
+  ctx.fillStyle=t.win; ctx.globalAlpha=0.7; rr(ctx,txtX,txtY,txtW,txtH,5); ctx.fill();
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.5; ctx.font=`${h*0.042}px monospace`;
+  ctx.fillText('T  Text',txtX+txtW/2,txtY+txtH*0.6);
+  // Fusion block
+  const fW=w*0.22, fH=h*0.48, fX=x+w*0.55, fY=y+h*0.28;
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.7; rr(ctx,fX,fY,fW,fH,5); ctx.fill();
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.85; ctx.font=`bold ${h*0.042}px monospace`;
+  ctx.fillText('Fusion',fX+fW/2,fY+fH*0.5);
+  // Output
+  const oX=x+w*0.82, oY=y+h*0.45, oR=h*0.08;
+  ctx.fillStyle=t.win; ctx.globalAlpha=0.85;
+  ctx.beginPath(); ctx.arc(oX,oY,oR,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.7; ctx.font=`${h*0.036}px monospace`;
+  ctx.fillText('out',oX,oY+h*0.015);
+  // Arrows
+  ctx.strokeStyle=t.accent; ctx.lineWidth=2; ctx.globalAlpha=0.4;
+  ctx.beginPath(); ctx.moveTo(imgX+imgW,imgY+imgH/2); ctx.lineTo(fX,fY+fH*0.3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(txtX+txtW,txtY+txtH/2); ctx.lineTo(fX,fY+fH*0.7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(fX+fW,fY+fH/2); ctx.lineTo(oX-oR,oY); ctx.stroke();
+  // Label
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Multimodal · VLM',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Pruning / Sparsity ──────────────────────────────────
+function artPruning(ctx, x, y, w, h, t) {
+  // Draw a grid of neurons, some pruned (faded)
+  const cols=8, rows=6, nR=Math.min(w/(cols*3.2), h/(rows*3.2));
+  const gx0=x+(w-cols*nR*2.8)/2, gy0=y+h*0.12;
+  const rng=srand(42);
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    const pruned=rng()>0.45;
+    const cx2=gx0+c*nR*2.8+nR, cy2=gy0+r*nR*2.8+nR;
+    ctx.fillStyle=pruned?t.dark:t.accent; ctx.globalAlpha=pruned?0.12:0.75;
+    ctx.beginPath(); ctx.arc(cx2,cy2,nR*0.7,0,Math.PI*2); ctx.fill();
+    if(!pruned && c<cols-1){
+      // Draw connections to next column non-pruned
+      ctx.strokeStyle=t.accent; ctx.lineWidth=1; ctx.globalAlpha=0.2;
+      ctx.beginPath(); ctx.moveTo(cx2+nR*0.7,cy2); ctx.lineTo(cx2+nR*2.1,cy2); ctx.stroke();
+    }
+    if(pruned){
+      ctx.strokeStyle=t.dark; ctx.lineWidth=1.5; ctx.globalAlpha=0.3;
+      ctx.beginPath(); ctx.moveTo(cx2-nR*0.5,cy2-nR*0.5); ctx.lineTo(cx2+nR*0.5,cy2+nR*0.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx2+nR*0.5,cy2-nR*0.5); ctx.lineTo(cx2-nR*0.5,cy2+nR*0.5); ctx.stroke();
+    }
+  }
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Pruning · Sparsity',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Contrastive Learning / SimCLR ──────────────────────
+function artContrastive(ctx, x, y, w, h, t) {
+  // Positive pair (close together)
+  const cx1=x+w*0.25, cy1=y+h*0.35, cx2p=x+w*0.42, cy2p=y+h*0.35;
+  const r2=h*0.08;
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.8;
+  ctx.beginPath(); ctx.arc(cx1,cy1,r2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.8;
+  ctx.beginPath(); ctx.arc(cx2p,cy2p,r2,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=t.accent; ctx.lineWidth=2; ctx.globalAlpha=0.6; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(cx1+r2,cy1); ctx.lineTo(cx2p-r2,cy2p); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.6; ctx.font=`${h*0.036}px monospace`; ctx.textAlign='center';
+  ctx.fillText('+',((cx1+cx2p)/2),cy1-r2*1.5);
+  // Negative samples (scattered, different color)
+  const negs=[[0.65,0.22],[0.75,0.42],[0.6,0.58],[0.82,0.62],[0.55,0.38]];
+  negs.forEach(([nx,ny])=>{
+    ctx.fillStyle=t.win; ctx.globalAlpha=0.5;
+    ctx.beginPath(); ctx.arc(x+w*nx,y+h*ny,r2*0.7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=t.dark; ctx.lineWidth=1; ctx.globalAlpha=0.3;
+    ctx.beginPath(); ctx.moveTo(cx2p+r2,cy2p); ctx.lineTo(x+w*nx-r2*0.7,y+h*ny); ctx.stroke();
+  });
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.5; ctx.font=`${h*0.032}px monospace`;
+  ctx.fillText('–',x+w*0.72,y+h*0.18);
+  // Embedding space label
+  ctx.strokeStyle=t.accent; ctx.lineWidth=1; ctx.globalAlpha=0.15;
+  ctx.beginPath(); ctx.arc(x+w*0.5,y+h*0.42,h*0.35,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Contrastive · SimCLR',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Normalization (LayerNorm/BatchNorm) ────────────────
+function artNorm(ctx, x, y, w, h, t) {
+  // Before: scattered bars of different heights
+  const barW=w*0.06, gap=w*0.02;
+  const heights=[0.7,0.3,0.9,0.45,0.85,0.25];
+  const bx0=x+w*0.04, by0=y+h*0.1;
+  heights.forEach((ht,i)=>{
+    ctx.fillStyle=t.win; ctx.globalAlpha=0.5;
+    const bh2=h*0.35*ht;
+    ctx.fillRect(bx0+i*(barW+gap),by0+h*0.35-bh2,barW,bh2);
+  });
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.4; ctx.font=`${h*0.035}px monospace`; ctx.textAlign='center';
+  ctx.fillText('before',bx0+heights.length*(barW+gap)/2,by0+h*0.4);
+  // Arrow
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.6; ctx.font=`bold ${h*0.06}px monospace`;
+  ctx.fillText('→',x+w*0.46,y+h*0.32);
+  // After: normalized bars (uniform height with mean/std)
+  const norm=[0.52,0.48,0.55,0.5,0.54,0.47];
+  const bx1=x+w*0.55;
+  norm.forEach((ht,i)=>{
+    ctx.fillStyle=t.accent; ctx.globalAlpha=0.7;
+    const bh2=h*0.35*ht;
+    ctx.fillRect(bx1+i*(barW+gap),by0+h*0.35-bh2,barW,bh2);
+  });
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.4; ctx.font=`${h*0.035}px monospace`;
+  ctx.fillText('after',bx1+norm.length*(barW+gap)/2,by0+h*0.4);
+  // μ=0, σ=1 label
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.55; ctx.font=`bold ${h*0.05}px monospace`;
+  ctx.fillText('μ=0  σ=1',x+w*0.5,y+h*0.68);
+  // Formula box
+  ctx.fillStyle=t.win; ctx.globalAlpha=0.3; rr(ctx,x+w*0.15,y+h*0.72,w*0.7,h*0.12,4); ctx.fill();
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.45; ctx.font=`${h*0.04}px monospace`;
+  ctx.fillText('x̂ = (x − μ) / σ',x+w*0.5,y+h*0.8);
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Normalization',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Dropout ─────────────────────────────────────────────
+function artDropout(ctx, x, y, w, h, t) {
+  const grid=[
+    '11.1.11.1.',
+    '.1.11..11.',
+    '1..1.11.1.',
+    '.11..1..11',
+    '1.1.1..1.1',
+    '..11.1.11.',
+    '1.1..11..1',
+    '.1.1.1.1..',
+  ];
+  const cols=10, rows=8;
+  const u=Math.min(w/(cols*1.5),h*0.7/(rows*1.5));
+  const ox=x+(w-cols*u*1.4)/2, oy=y+h*0.08;
+  for(let r=0;r<rows;r++) for(let c=0;c<grid[r].length;c++){
+    const active=grid[r][c]==='1';
+    const nx=ox+c*u*1.4, ny=oy+r*u*1.4;
+    ctx.fillStyle=active?t.accent:t.dark; ctx.globalAlpha=active?0.75:0.12;
+    ctx.beginPath(); ctx.arc(nx+u/2,ny+u/2,u*0.45,0,Math.PI*2); ctx.fill();
+    if(!active){
+      ctx.strokeStyle=t.dark; ctx.lineWidth=1; ctx.globalAlpha=0.25;
+      ctx.beginPath(); ctx.moveTo(nx+u*0.15,ny+u*0.15); ctx.lineTo(nx+u*0.85,ny+u*0.85); ctx.stroke();
+    }
+  }
+  ctx.fillStyle=t.text; ctx.globalAlpha=0.5; ctx.font=`bold ${h*0.05}px monospace`; ctx.textAlign='center';
+  ctx.fillText('p = 0.5',x+w*0.5,y+h*0.82);
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Dropout · Regularization',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Speech / Whisper / TTS ─────────────────────────────
+function artSpeech(ctx, x, y, w, h, t) {
+  // Waveform
+  const wY=y+h*0.2, wH=h*0.25;
+  ctx.strokeStyle=t.accent; ctx.lineWidth=2; ctx.globalAlpha=0.7;
+  ctx.beginPath();
+  for(let i=0;i<w*0.9;i+=2){
+    const amp=Math.sin(i*0.05)*Math.sin(i*0.02)*wH*0.4*(1+Math.sin(i*0.008)*0.5);
+    const px2=x+w*0.05+i, py2=wY+wH/2+amp;
+    i===0?ctx.moveTo(px2,py2):ctx.lineTo(px2,py2);
+  }
+  ctx.stroke();
+  // Spectrogram bars
+  const specY=y+h*0.52, specH=h*0.28, specCols=20;
+  const rng=srand(7);
+  for(let c=0;c<specCols;c++){
+    const rows2=3+Math.floor(rng()*5);
+    for(let r=0;r<rows2;r++){
+      const bw=w*0.9/specCols*0.85;
+      ctx.fillStyle=t.accent; ctx.globalAlpha=0.15+rng()*0.55;
+      ctx.fillRect(x+w*0.05+c*(w*0.9/specCols),specY+specH-r*(specH/8)-specH/8,bw,specH/8*0.85);
+    }
+  }
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Speech · Whisper · TTS',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── World Model / Video ────────────────────────────────
+function artWorldModel(ctx, x, y, w, h, t) {
+  // Sequence of frames
+  const fW=w*0.18, fH=h*0.35, gap=w*0.04;
+  for(let i=0;i<4;i++){
+    const fx=x+w*0.06+i*(fW+gap), fy=y+h*0.12;
+    ctx.fillStyle=t.win; ctx.globalAlpha=0.25+i*0.2; rr(ctx,fx,fy,fW,fH,3); ctx.fill();
+    ctx.strokeStyle=t.accent; ctx.lineWidth=1; ctx.globalAlpha=0.3;
+    rr(ctx,fx,fy,fW,fH,3); ctx.stroke();
+    ctx.fillStyle=t.text; ctx.globalAlpha=0.4+i*0.15; ctx.font=`${h*0.035}px monospace`; ctx.textAlign='center';
+    ctx.fillText(`t${i>0?'+'+i:''}`,fx+fW/2,fy+fH+h*0.05);
+    if(i<3){
+      ctx.fillStyle=t.accent; ctx.globalAlpha=0.5; ctx.font=`${h*0.05}px monospace`;
+      ctx.fillText('→',fx+fW+gap*0.35,fy+fH/2);
+    }
+  }
+  // Prediction box
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.55;
+  rr(ctx,x+w*0.2,y+h*0.6,w*0.6,h*0.2,5); ctx.fill();
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.85; ctx.font=`bold ${h*0.044}px monospace`; ctx.textAlign='center';
+  ctx.fillText('World Model — Predict Next',x+w*0.5,y+h*0.72);
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Video · World Model · Sora',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Benchmark / Evaluation ─────────────────────────────
+function artBenchmark(ctx, x, y, w, h, t) {
+  // Bar chart
+  const bars=[{name:'GPT-4',val:0.92},{name:'Claude',val:0.89},{name:'Gemini',val:0.85},{name:'Llama',val:0.72},{name:'Mistral',val:0.68}];
+  const bW=w*0.12, bGap=w*0.06, bx0=x+(w-bars.length*(bW+bGap))/2, bBase=y+h*0.72;
+  bars.forEach((b,i)=>{
+    const bH=h*0.5*b.val;
+    const bx=bx0+i*(bW+bGap);
+    ctx.fillStyle=i===0?t.accent:t.win; ctx.globalAlpha=0.7;
+    ctx.fillRect(bx,bBase-bH,bW,bH);
+    ctx.fillStyle=t.text; ctx.globalAlpha=0.5; ctx.font=`${h*0.03}px monospace`; ctx.textAlign='center';
+    ctx.fillText(b.name,bx+bW/2,bBase+h*0.05);
+    ctx.fillStyle=t.text; ctx.globalAlpha=0.4; ctx.font=`${h*0.028}px monospace`;
+    ctx.fillText((b.val*100).toFixed(0),bx+bW/2,bBase-bH-h*0.02);
+  });
+  // Axis
+  ctx.strokeStyle=t.text; ctx.lineWidth=1; ctx.globalAlpha=0.2;
+  ctx.beginPath(); ctx.moveTo(bx0-w*0.02,bBase); ctx.lineTo(bx0+bars.length*(bW+bGap),bBase); ctx.stroke();
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Benchmark · Eval',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Federated Learning ─────────────────────────────────
+function artFederated(ctx, x, y, w, h, t) {
+  // Central server
+  const cR=h*0.12;
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.8;
+  ctx.beginPath(); ctx.arc(x+w*0.5,y+h*0.4,cR,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=t.dark; ctx.globalAlpha=0.85; ctx.font=`bold ${h*0.04}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Global',x+w*0.5,y+h*0.42);
+  // Client devices
+  const clients=[[0.15,0.2],[0.85,0.2],[0.12,0.65],[0.88,0.65],[0.5,0.78]];
+  const dR=h*0.07;
+  clients.forEach(([cx,cy])=>{
+    ctx.fillStyle=t.win; ctx.globalAlpha=0.7;
+    ctx.beginPath(); ctx.arc(x+w*cx,y+h*cy,dR,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=t.accent; ctx.lineWidth=1.5; ctx.globalAlpha=0.4; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(x+w*cx,y+h*cy); ctx.lineTo(x+w*0.5,y+h*0.4); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Federated Learning',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
+// ─── Embedding Space / t-SNE ────────────────────────────
+function artEmbedding(ctx, x, y, w, h, t) {
+  const clusters=[
+    {cx:0.25,cy:0.35,color:t.accent,pts:[[0.2,0.3],[0.28,0.28],[0.22,0.38],[0.3,0.35],[0.25,0.42]]},
+    {cx:0.7,cy:0.3,color:t.win,pts:[[0.65,0.25],[0.73,0.28],[0.68,0.35],[0.75,0.32],[0.72,0.22]]},
+    {cx:0.45,cy:0.65,color:t.text,pts:[[0.4,0.6],[0.48,0.62],[0.42,0.7],[0.5,0.68],[0.45,0.58]]},
+  ];
+  const r3=h*0.025;
+  clusters.forEach(cl=>{
+    // Cluster boundary
+    ctx.strokeStyle=cl.color; ctx.lineWidth=1; ctx.globalAlpha=0.15;
+    ctx.beginPath(); ctx.arc(x+w*cl.cx,y+h*cl.cy,h*0.15,0,Math.PI*2); ctx.stroke();
+    // Points
+    cl.pts.forEach(([px2,py2])=>{
+      ctx.fillStyle=cl.color; ctx.globalAlpha=0.65;
+      ctx.beginPath(); ctx.arc(x+w*px2,y+h*py2,r3,0,Math.PI*2); ctx.fill();
+    });
+  });
+  // Axes
+  ctx.strokeStyle=t.text; ctx.lineWidth=1; ctx.globalAlpha=0.15;
+  ctx.beginPath(); ctx.moveTo(x+w*0.05,y+h*0.85); ctx.lineTo(x+w*0.95,y+h*0.85); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+w*0.05,y+h*0.1); ctx.lineTo(x+w*0.05,y+h*0.85); ctx.stroke();
+  ctx.fillStyle=t.accent; ctx.globalAlpha=0.35; ctx.font=`${h*0.038}px monospace`; ctx.textAlign='center';
+  ctx.fillText('Embedding · t-SNE',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+
 // ─── ART REGISTRY ──────────────────────────────────────────
 const ARTS = [
   {id:'mlp',         name:'MLP',            fn:artMLP,         kw:['neural network','feedforward','perceptron','fully connected','dense','deep learning']},
@@ -1914,6 +2219,17 @@ const ARTS = [
   {id:'rocket',      name:'Rocket',         fn:artRocket,       kw:['scaling laws','chinchilla','compute','parameters','bigger','emergent','growth','performance']},
   {id:'goat',        name:'PaperGoat',      fn:artGoatChar,     kw:['papergoat','goat','digest','newsletter','review','paper']},
   {id:'ninja',       name:'Flash Ninja',    fn:artNinja,        kw:['flashattention','flash attention','fast','efficient','kernel','optimization','speed','inference']},
+  // ─── NEW ARTS ───
+  {id:'multimodal',  name:'Multimodal',     fn:artMultimodal,   kw:['multimodal','vlm','vision language','gpt-4v','gpt-4o','gemini','image text','visual qa','llava']},
+  {id:'pruning',     name:'Pruning',        fn:artPruning,      kw:['pruning','sparsity','sparse','structured','unstructured','magnitude','lottery ticket','compression']},
+  {id:'contrastive', name:'Contrastive',    fn:artContrastive,  kw:['contrastive','simclr','moco','positive','negative','self-supervised','byol','dino','representation']},
+  {id:'norm',        name:'Normalization',  fn:artNorm,         kw:['normalization','layernorm','batchnorm','rmsnorm','layer norm','batch norm','groupnorm','instancenorm']},
+  {id:'dropout',     name:'Dropout',        fn:artDropout,      kw:['dropout','regularization','overfitting','droppath','stochastic depth','bernoulli']},
+  {id:'speech',      name:'Speech',         fn:artSpeech,       kw:['speech','whisper','tts','asr','voice','audio','wav2vec','hubert','speechgpt','bark']},
+  {id:'worldmodel',  name:'World Model',    fn:artWorldModel,   kw:['world model','video','sora','prediction','temporal','dynamics','dreamer','simulation','genie']},
+  {id:'benchmark',   name:'Benchmark',      fn:artBenchmark,    kw:['benchmark','evaluation','mmlu','gsm8k','leaderboard','harness','score','comparison','arena']},
+  {id:'federated',   name:'Federated',      fn:artFederated,    kw:['federated','federated learning','distributed','privacy','differential privacy','on-device','edge']},
+  {id:'embedding',   name:'Embedding',      fn:artEmbedding,    kw:['embedding','t-sne','umap','representation','latent space','cluster','similarity','visualization']},
 ].filter((a,i,arr)=>arr.findIndex(b=>b.id===a.id)===i); // dedupe
 
 // ─── STATE ─────────────────────────────────────────────────
@@ -2133,31 +2449,61 @@ function draw() {
   for(let sy=wy+40;sy<wy+wh;sy+=4){ctx.fillStyle=sy%8===0?t.dark:t.text;ctx.fillRect(wx,sy,ww,1);}
   ctx.globalAlpha=1;
 
-  // Title — auto-size, max 3 lines, bigger starting size
+  // Title — render within window content zone
   ctx.fillStyle=t.text;
   const pad=28, maxW=ww-pad*2;
-  const maxLines=3, availH=wh-90;
-  let fs=68; ctx.font=`bold ${fs}px monospace`;
-  while(fs>22){
-    ctx.font=`bold ${fs}px monospace`;
-    const words=title.split(' '); let line='',lines=0;
-    words.forEach(w=>{const tt=line+w+' ';ctx.measureText(tt).width>maxW&&line?(lines++,line=w+' '):(line=tt);});
-    if(line.trim())lines++;
-    if(lines<=maxLines && lines*fs*1.18+40<=availH) break;
-    fs-=2;
+  const contentTop=wy+40+20;    // 20px below title bar
+  const contentBot=wy+wh-44-16; // 16px above footer
+  const contentH=contentBot-contentTop-20; // 20px for accent bar
+
+  // Font size: manual or auto-fit
+  const manualFs=parseInt(document.getElementById('f-fs-num').value);
+  let fs = (manualFs>=14 && manualFs<=72) ? manualFs : 0;
+
+  // Count wrapped lines for a given font size
+  function countLines(sz){
+    ctx.font=`bold ${sz}px monospace`;
+    let lc=0;
+    title.split('\n').forEach(para=>{
+      if(!para.trim()){lc++;return;}
+      const words=para.split(' '); let line='';
+      words.forEach(w=>{const tt=line+w+' ';ctx.measureText(tt).width>maxW&&line?(lc++,line=w+' '):(line=tt);});
+      if(line.trim())lc++;
+    });
+    return lc;
   }
+
+  if(!fs){ // auto: find largest font that fits
+    fs=68;
+    while(fs>14){
+      const lc=countLines(fs);
+      if(lc*fs*1.18<=contentH) break;
+      fs-=2;
+    }
+  }
+
+  // Update the font size display
+  const fsLabel=document.getElementById('fs-val');
+  if(fsLabel) fsLabel.textContent=(manualFs>=14&&manualFs<=72)?fs+'px':'auto ('+fs+'px)';
+
   ctx.font=`bold ${fs}px monospace`;
-  const tY=wy+72;
-  // Pixel shadow for title text (offset by 3px)
+  const nLinesCalc=countLines(fs);
+  const lineH=fs*1.18;
+  const blockH=nLinesCalc*lineH;
+  const ascent=fs*0.82;
+  const blockVisualTop=contentTop+Math.max(0,(contentH-blockH)/2);
+  const tY=blockVisualTop+ascent;
+
+  // Pixel shadow
   ctx.fillStyle=t.dark; ctx.globalAlpha=0.55;
-  wrapText(ctx,title,wx+pad+3,tY+3,maxW,fs*1.18);
+  wrapText(ctx,title,wx+pad+3,tY+3,maxW,lineH);
   // Main title text
   ctx.fillStyle=t.text; ctx.globalAlpha=1;
   ctx.font=`bold ${fs}px monospace`;
-  const nLines=wrapText(ctx,title,wx+pad,tY,maxW,fs*1.18);
+  const nLines=wrapText(ctx,title,wx+pad,tY,maxW,lineH);
 
   // Accent bar under title
-  const barY=tY+nLines*fs*1.18+12;
+  const barY=Math.min(tY+(nLines-1)*lineH+fs*0.4+12, contentBot);
   ctx.fillStyle=t.accent; ctx.globalAlpha=0.5;
   ctx.fillRect(wx+pad, barY, 80, 4);
   ctx.globalAlpha=1;
@@ -2169,7 +2515,7 @@ function draw() {
     if((dx/pxU)%2===0){ctx.fillStyle=t.dark;ctx.globalAlpha=0.2;ctx.fillRect(wx+dx,wy+wh-48,pxU,pxU);ctx.globalAlpha=1;}
   }
   ctx.fillStyle=t.accent; ctx.globalAlpha=0.55; ctx.font='bold 13px monospace';
-  ctx.fillText(`PAPER REVIEW  ·  ${ARTS[ST.art].name.toUpperCase()}  ·  ${brand.toUpperCase()}`, wx+pad, wy+wh-16);
+  ctx.fillText(`PAPER REVIEW  ·  ${brand.toUpperCase()}`, wx+pad, wy+wh-16);
   ctx.globalAlpha=1;
 
   // PaperGoat Watermark
@@ -2373,6 +2719,20 @@ draw();
   const el=document.getElementById(id);
   if(el) { el.addEventListener('input', draw); el.addEventListener('change', draw); }
 });
+// Font size: slider ↔ number sync
+const fsSlider=document.getElementById('f-fs'), fsNum=document.getElementById('f-fs-num');
+fsSlider.addEventListener('input', ()=>{
+  const v=parseInt(fsSlider.value);
+  if(v>=14){ fsNum.value=v; } else { fsNum.value=''; }
+  draw();
+});
+fsNum.addEventListener('input', ()=>{
+  const v=parseInt(fsNum.value);
+  if(v>=14&&v<=72){ fsSlider.value=v; } else { fsSlider.value=0; }
+  draw();
+});
+// Double-click slider to reset to auto
+fsSlider.addEventListener('dblclick', ()=>{ fsSlider.value=0; fsNum.value=''; draw(); });
 document.getElementById('art-search').addEventListener('input', e => buildArtGrid(e.target.value));
 </script>
 </body>
