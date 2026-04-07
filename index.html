@@ -249,8 +249,11 @@ input:focus, textarea:focus, select:focus { border-color: var(--ac); }
         <div class="field"><label>Pixel Art Label</label>
           <input type="text" id="f-label" value="Transformer">
         </div>
-        <div class="field"><label>Branding</label>
-          <input type="text" id="f-wm-text" placeholder="PaperGoat" value="PaperGoat">
+        <div class="field"><label>Upper Branding</label>
+          <input type="text" id="f-brand-upper" placeholder="paper-review.dev" value="paper-review.dev">
+        </div>
+        <div class="field"><label>Bottom Branding</label>
+          <input type="text" id="f-brand-bottom" placeholder="PAPER REVIEW" value="PAPER REVIEW">
         </div>
       </div>
     </div>
@@ -3338,7 +3341,8 @@ function draw() {
   const title   = document.getElementById('f-title').value || 'Paper Title';
   const subtitle= '';
   const pxLabel = document.getElementById('f-label').value  || 'Model';
-  const brand   = document.getElementById('f-wm-text').value || 'PaperGoat';
+  const brandUp = document.getElementById('f-brand-upper').value || 'paper-review.dev';
+  const brandBt = document.getElementById('f-brand-bottom').value || 'PAPER REVIEW';
   const wmText  = document.getElementById('f-wm-badge').value || 'PaperGoat by Jason';
 
   ctx.clearRect(0,0,W,H);
@@ -3425,7 +3429,7 @@ function draw() {
     ctx.fillStyle=c; ctx.fillRect(wx+ox,wy+13,14,14);
   });
   ctx.fillStyle=t.text; ctx.globalAlpha=0.4; ctx.font='bold 13px monospace';
-  ctx.fillText(`> ${brand}`, wx+76, wy+26); ctx.globalAlpha=1;
+  ctx.fillText(`> ${brandUp}`, wx+76, wy+26); ctx.globalAlpha=1;
   // Scanline effect on window
   ctx.globalAlpha=0.04;
   for(let sy=wy+40;sy<wy+wh;sy+=4){ctx.fillStyle=sy%8===0?t.dark:t.text;ctx.fillRect(wx,sy,ww,1);}
@@ -3509,7 +3513,7 @@ function draw() {
     if((dx/pxU)%2===0){ctx.fillStyle=t.dark;ctx.globalAlpha=0.2;ctx.fillRect(wx+dx,wy+wh-48,pxU,pxU);ctx.globalAlpha=1;}
   }
   ctx.fillStyle=t.accent; ctx.globalAlpha=0.55; ctx.font='bold 13px monospace';
-  ctx.fillText(`PAPER REVIEW  ·  ${brand.toUpperCase()}`, wx+pad, wy+wh-16);
+  ctx.fillText(brandBt.toUpperCase(), wx+pad, wy+wh-16);
   ctx.globalAlpha=1;
 
   // PaperGoat Watermark
@@ -3697,7 +3701,7 @@ buildColorEditor();
 buildArtGrid();
 draw();
 
-['f-title','f-label','f-wm-text','f-wm-badge'].forEach(id => {
+['f-title','f-label','f-brand-upper','f-brand-bottom','f-wm-badge'].forEach(id => {
   const el=document.getElementById(id);
   if(el) el.addEventListener('input', draw);
 });
