@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Paper Thumbnail Generator</title>
+<title>PaperFrame — AI Paper Thumbnail Generator</title>
 <style>
 :root {
   --bg: #0a0e1a; --s1: #111827; --s2: #1f2937;
@@ -210,12 +210,11 @@ input:focus, select:focus { border-color: var(--ac); }
 </head>
 <body>
 <header>
-  <h1>AI Paper Thumbnail Generator</h1>
+  <h1>PaperFrame</h1>
   <span class="badge">v2.0</span>
   <span class="badge">1200×630 PNG</span>
   <div class="header-right">
     <button class="btn btn-p" onclick="exportPNG()">↓ Export PNG</button>
-    <button class="btn" onclick="randBg()">↺ Randomize</button>
   </div>
 </header>
 
@@ -1733,11 +1732,21 @@ function draw() {
   ctx.fillStyle=t.text; ctx.globalAlpha=0.35; ctx.font='13px monospace';
   ctx.fillText(brand, wx+88, wy+25); ctx.globalAlpha=1;
 
-  // Title
+  // Title — auto-size to fit window, max 3 lines
   ctx.fillStyle=t.text;
   const pad=32, maxW=ww-pad*2;
-  let fs=68; ctx.font=`bold ${fs}px monospace`;
-  while(ctx.measureText(title).width>maxW && fs>22){fs-=2;ctx.font=`bold ${fs}px monospace`;}
+  const maxLines=3, availH=wh-120; // space between titlebar and footer
+  let fs=56; ctx.font=`bold ${fs}px monospace`;
+  // Shrink font until title fits within maxLines
+  while(fs>20){
+    ctx.font=`bold ${fs}px monospace`;
+    const words=title.split(' '); let line='',lines=0;
+    words.forEach(w=>{const t=line+w+' ';ctx.measureText(t).width>maxW&&line?(lines++,line=w+' '):(line=t);});
+    if(line.trim())lines++;
+    if(lines<=maxLines && lines*fs*1.18+60<=availH) break;
+    fs-=2;
+  }
+  ctx.font=`bold ${fs}px monospace`;
   const tY=wy+78;
   const nLines=wrapText(ctx,title,wx+pad,tY,maxW,fs*1.18);
 
