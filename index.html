@@ -377,6 +377,25 @@ const THEMES = [
   { id:'ocean',   name:'Ocean Depth',    bg:'#164e63', bg2:'#0c3040', win:'#0e7490', text:'#fff', accent:'#67e8f9', dark:'#062030' },
   { id:'synth',   name:'Synthwave',      bg:'#2d1b69', bg2:'#1a0f40', win:'#7c3aed', text:'#fff', accent:'#f0abfc', dark:'#0d0720' },
   { id:'matcha',  name:'Matcha',         bg:'#254d32', bg2:'#163020', win:'#3a7d44', text:'#fff', accent:'#bbf7d0', dark:'#0a1f14' },
+  // ─── NEW THEMES ───
+  { id:'neon',     name:'Neon Night',     bg:'#0a0a1a', bg2:'#050510', win:'#1a1a3e', text:'#fff', accent:'#00ff88', dark:'#000000' },
+  { id:'sunset',   name:'Sunset Blaze',   bg:'#c2410c', bg2:'#7c2d12', win:'#ea580c', text:'#fff', accent:'#fed7aa', dark:'#431407' },
+  { id:'mint',     name:'Fresh Mint',     bg:'#047857', bg2:'#064e3b', win:'#059669', text:'#fff', accent:'#a7f3d0', dark:'#022c22' },
+  { id:'cherry',   name:'Cherry Blossom', bg:'#be185d', bg2:'#831843', win:'#e11d7a', text:'#fff', accent:'#fce7f3', dark:'#500724' },
+  { id:'cobalt',   name:'Cobalt',         bg:'#1e3a8a', bg2:'#172554', win:'#2563eb', text:'#fff', accent:'#bfdbfe', dark:'#0c1a4a' },
+  { id:'lava',     name:'Lava',           bg:'#7f1d1d', bg2:'#450a0a', win:'#b91c1c', text:'#fff', accent:'#fca5a5', dark:'#2a0606' },
+  { id:'electric', name:'Electric Blue',  bg:'#0c4a6e', bg2:'#082f49', win:'#0369a1', text:'#fff', accent:'#38bdf8', dark:'#041c32' },
+  { id:'grape',    name:'Grape',          bg:'#581c87', bg2:'#3b0764', win:'#7e22ce', text:'#fff', accent:'#d8b4fe', dark:'#1e0540' },
+  { id:'steel',    name:'Steel Gray',     bg:'#374151', bg2:'#1f2937', win:'#4b5563', text:'#fff', accent:'#d1d5db', dark:'#111827' },
+  { id:'jade',     name:'Jade',           bg:'#065f46', bg2:'#064e3b', win:'#047857', text:'#fff', accent:'#6ee7b7', dark:'#022c22' },
+  { id:'mocha',    name:'Mocha',          bg:'#44403c', bg2:'#292524', win:'#57534e', text:'#fff', accent:'#d6d3d1', dark:'#1c1917' },
+  { id:'sahara',   name:'Sahara',         bg:'#854d0e', bg2:'#713f12', win:'#a16207', text:'#fff', accent:'#fef08a', dark:'#422006' },
+  { id:'aurora',   name:'Aurora',         bg:'#0f2b1e', bg2:'#071a12', win:'#134e4a', text:'#fff', accent:'#2dd4bf', dark:'#040d0a' },
+  { id:'peach',    name:'Peach',          bg:'#9a3412', bg2:'#7c2d12', win:'#c2410c', text:'#fff', accent:'#fdba74', dark:'#431407' },
+  { id:'midnight', name:'Midnight',       bg:'#020617', bg2:'#000209', win:'#0f172a', text:'#e2e8f0', accent:'#818cf8', dark:'#000000' },
+  { id:'aqua',     name:'Aqua Marine',    bg:'#155e75', bg2:'#164e63', win:'#0891b2', text:'#fff', accent:'#a5f3fc', dark:'#083344' },
+  { id:'wine',     name:'Wine',           bg:'#6b2145', bg2:'#4a1732', win:'#9d174d', text:'#fff', accent:'#f9a8d4', dark:'#2e0b1e' },
+  { id:'matrix',   name:'Matrix',         bg:'#052e16', bg2:'#022c22', win:'#14532d', text:'#4ade80', accent:'#22c55e', dark:'#011a0e' },
 ];
 
 // ─── CODE BACKGROUNDS ──────────────────────────────────────
@@ -2179,6 +2198,916 @@ function artEmbedding(ctx, x, y, w, h, t) {
   ctx.textAlign='left'; ctx.globalAlpha=1;
 }
 
+// ─── Owl (Knowledge / Pretraining) ──────────────────────────
+function artOwl(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '..000......000..',
+    '.01110....01110.',
+    '.01510....01510.',
+    '.01110....01110.',
+    '..000......000..',
+    '...0111111110...',
+    '...0111111110...',
+    '...0111111110...',
+    '...0113311110...',
+    '...0111111110...',
+    '...0111001110...',
+    '....01111110....',
+    '...0222222220...',
+    '...0222222220...',
+    '...0222222220...',
+    '...0222002220...',
+    '...0020..0200...',
+    '...0020..0200...',
+    '...0000..0000...',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#92400e','2':'#d4a574','3':'#1e293b','4':t.bg2,'5':'#fff'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Wise Owl · Pretrain',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Penguin (Linux / Systems / Inference) ──────────────────
+function artPenguin(ctx, x, y, w, h, t) {
+  const grid=[
+    '......0000......',
+    '.....011110.....',
+    '....01155110....',
+    '....01150110....',
+    '....01111110....',
+    '.....011110.....',
+    '...0001111000...',
+    '..022011110220..',
+    '..022011110220..',
+    '..022033330220..',
+    '..022033330220..',
+    '..022033330220..',
+    '...0203333020...',
+    '...0200330020...',
+    '....00033000....',
+    '.....003300.....',
+    '....03300330....',
+    '....00000000....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#e2e8f0','2':'#334155','3':'#fbbf24','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Penguin · Deploy',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Fox (Clever / Optimization) ───────────────────────────
+function artFox(ctx, x, y, w, h, t) {
+  const grid=[
+    '.00..........00.',
+    '.020........020.',
+    '.0220......0220.',
+    '.02220....02220.',
+    '.022200000222.0.',
+    '.022222222220...',
+    '.022222222220...',
+    '.022551225520...',
+    '.022001220010...',
+    '.022222222220...',
+    '.022211122220...',
+    '.022222222220...',
+    '..02222222200...',
+    '..02222222200...',
+    '..02222222200...',
+    '..02222222200...',
+    '...022002200....',
+    '...000..000.....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#fff','2':'#f97316','3':t.accent,'5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Fox · Optimizer',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Octopus (Multi-task / Multi-head) ─────────────────────
+function artOctopus(ctx, x, y, w, h, t) {
+  const grid=[
+    '......0000......',
+    '....00111100....',
+    '...0111111110...',
+    '...0115511550...',
+    '...0110011000...',
+    '...0111111110...',
+    '....01111110....',
+    '..001111111100..',
+    '.01..011110..10.',
+    '.010..0110..010.',
+    '..010..00..010..',
+    '...010....010...',
+    '..010......010..',
+    '.010........010.',
+    '.01..........10.',
+    '.0............0.',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.04,w,h*0.74,
+    {'0':t.dark,'1':'#c084fc','2':'#7c3aed','3':t.accent,'5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Octopus · Multi-task',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Bee (Swarm / Ensemble) ────────────────────────────────
+function artBee(ctx, x, y, w, h, t) {
+  const grid=[
+    '..00....00......',
+    '..010..010......',
+    '...010010.......',
+    '....0330........',
+    '..55033055......',
+    '.5550330555.....',
+    '..55022055......',
+    '....0220........',
+    '....0330........',
+    '....0220........',
+    '....0330........',
+    '....0000........',
+    '....0..0........',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.05,w,h*0.7,
+    {'0':t.dark,'1':t.bg2,'2':'#fbbf24','3':'#1e293b','5':'#bfdbfe'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Bee · Swarm · Ensemble',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Turtle (Slow / Careful / Safety) ─────────────────────
+function artTurtle(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '......000.......',
+    '.....01110......',
+    '.....01510......',
+    '.....01110......',
+    '...002222200....',
+    '..02222222220...',
+    '..02233233220...',
+    '..02233233220...',
+    '..02222222220...',
+    '...002222200....',
+    '.0010.000.0100..',
+    '.010.......010..',
+    '.000.......000..',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.05,w,h*0.72,
+    {'0':t.dark,'1':'#86efac','2':'#166534','3':'#4ade80','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Turtle · Safety · Slow',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Butterfly (Style Transfer / Transformation) ───────────
+function artButterfly(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '.000......000...',
+    '.033000000330...',
+    '.033220022330...',
+    '.033220022330...',
+    '.033220022330...',
+    '.033222222330...',
+    '..03322223300...',
+    '...003003000....',
+    '...033003300....',
+    '..03300003300...',
+    '..03322223300...',
+    '..03300003300...',
+    '...00000000.....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.04,w,h*0.74,
+    {'0':t.dark,'1':t.bg2,'2':'#f0abfc','3':'#a855f7'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Butterfly · Style Transfer',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Mushroom (Hallucination / Uncertainty) ────────────────
+function artMushroom(ctx, x, y, w, h, t) {
+  const grid=[
+    '.....00000......',
+    '...002222200....',
+    '..0222332220....',
+    '.022233322220...',
+    '.022222222220...',
+    '.022233222220...',
+    '.022222222220...',
+    '..0222222220....',
+    '...000111000....',
+    '.....01110......',
+    '.....01110......',
+    '.....01110......',
+    '.....01110......',
+    '....0111110.....',
+    '....0000000.....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.03,w,h*0.76,
+    {'0':t.dark,'1':'#e2e8f0','2':'#ef4444','3':'#fef08a'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Mushroom · Hallucination',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Hamster (Small Model / Edge) ──────────────────────────
+function artHamster(ctx, x, y, w, h, t) {
+  const grid=[
+    '..00......00....',
+    '.0220....0220...',
+    '.02210..01220...',
+    '.022100001220...',
+    '..02111112200...',
+    '..01111111100...',
+    '..01155115100...',
+    '..01100011000...',
+    '..01111111100...',
+    '..01131113100...',
+    '..01111111100...',
+    '...011111100....',
+    '..02222222200...',
+    '..022220222200..',
+    '..002200022000..',
+    '...00....00.....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#fbbf24','2':'#f97316','3':'#fff','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Hamster · Small Model',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Dragon (Large Model / Power) ──────────────────────────
+function artDragon(ctx, x, y, w, h, t) {
+  const grid=[
+    '00...............',
+    '030..............',
+    '0330.............',
+    '.033000000.......',
+    '..0222222200.....',
+    '..0225522220.....',
+    '..0220022200.....',
+    '..0222222220.....',
+    '...022222220.....',
+    '...022222220.00..',
+    '..0222222222020..',
+    '..02222222222200.',
+    '..0222222222220..',
+    '...0222222222200.',
+    '....02222222220..',
+    '.....0000000000..',
+    '......0..0..0..0.',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':t.bg2,'2':'#22c55e','3':'#ef4444','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Dragon · Large Model',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Lightbulb (Idea / Emergent Ability) ───────────────────
+function artLightbulb(ctx, x, y, w, h, t) {
+  const grid=[
+    '.......00.......',
+    '....00033000....',
+    '...0333333330...',
+    '..033333333330..',
+    '..033333333330..',
+    '..033333333330..',
+    '..033333333330..',
+    '...0333333330...',
+    '...0333333330...',
+    '....03333330....',
+    '....03333330....',
+    '.....022220.....',
+    '.....020020.....',
+    '.....022220.....',
+    '.....020020.....',
+    '......0000......',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':t.bg2,'2':'#94a3b8','3':'#fbbf24'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Eureka · Emergent',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Ghost (Invisible / Latent / Hidden State) ─────────────
+function artGhost(ctx, x, y, w, h, t) {
+  const grid=[
+    '.....00000......',
+    '...001111100....',
+    '..01111111110...',
+    '..01111111110...',
+    '..01155115510...',
+    '..01100110010...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01111111110...',
+    '..01111111110...',
+    '..010110101010..',
+    '..0.00.00.000...',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.03,w,h*0.76,
+    {'0':t.dark,'1':'#e2e8f0','2':t.bg2,'3':t.accent,'5':'#475569'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Ghost · Hidden State',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Telescope (Long Context / Far Sight) ──────────────────
+function artTelescope(ctx, x, y, w, h, t) {
+  const cxm=x+w*0.5,cym=y+h*0.35;
+  // Lens
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cxm-w*0.22,cym-h*0.08,h*0.12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.4;
+  ctx.beginPath();ctx.arc(cxm-w*0.22,cym-h*0.08,h*0.08,0,Math.PI*2);ctx.fill();
+  // Tube
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.6;
+  ctx.save();ctx.translate(cxm,cym);ctx.rotate(0.3);
+  ctx.fillRect(-w*0.18,-h*0.04,w*0.36,h*0.08);ctx.restore();
+  // Tripod
+  ctx.strokeStyle=t.text;ctx.lineWidth=2;ctx.globalAlpha=0.4;
+  ctx.beginPath();ctx.moveTo(cxm,cym+h*0.05);ctx.lineTo(cxm-w*0.12,cym+h*0.4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cxm,cym+h*0.05);ctx.lineTo(cxm+w*0.12,cym+h*0.4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cxm,cym+h*0.05);ctx.lineTo(cxm+w*0.02,cym+h*0.42);ctx.stroke();
+  // Stars
+  const stars=[[0.78,0.12],[0.85,0.25],[0.72,0.3],[0.9,0.15],[0.65,0.15]];
+  stars.forEach(([sx,sy])=>{
+    ctx.fillStyle=t.accent;ctx.globalAlpha=0.5;
+    ctx.beginPath();ctx.arc(x+w*sx,y+h*sy,h*0.015,0,Math.PI*2);ctx.fill();
+  });
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Telescope · Long Context',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Shield (Safety / Guardrails) ──────────────────────────
+function artShield(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5, sy2=y+h*0.08, sw=w*0.55, sh=h*0.7;
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.moveTo(cx3,sy2);ctx.lineTo(cx3+sw/2,sy2+sh*0.15);
+  ctx.lineTo(cx3+sw/2,sy2+sh*0.55);ctx.lineTo(cx3,sy2+sh);
+  ctx.lineTo(cx3-sw/2,sy2+sh*0.55);ctx.lineTo(cx3-sw/2,sy2+sh*0.15);ctx.closePath();ctx.fill();
+  // Inner
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.3;
+  const m=0.15;
+  ctx.beginPath();ctx.moveTo(cx3,sy2+sh*m);ctx.lineTo(cx3+sw*(0.5-m),sy2+sh*(0.15+m*0.5));
+  ctx.lineTo(cx3+sw*(0.5-m),sy2+sh*(0.55-m*0.3));ctx.lineTo(cx3,sy2+sh*(1-m));
+  ctx.lineTo(cx3-sw*(0.5-m),sy2+sh*(0.55-m*0.3));ctx.lineTo(cx3-sw*(0.5-m),sy2+sh*(0.15+m*0.5));ctx.closePath();ctx.fill();
+  // Check mark
+  ctx.strokeStyle=t.text;ctx.lineWidth=4;ctx.globalAlpha=0.8;
+  ctx.beginPath();ctx.moveTo(cx3-w*0.08,sy2+sh*0.45);ctx.lineTo(cx3-w*0.02,sy2+sh*0.55);ctx.lineTo(cx3+w*0.1,sy2+sh*0.35);ctx.stroke();
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Shield · Safety',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Compass (Navigation / Search / RLHF) ─────────────────
+function artCompass(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5,cy3=y+h*0.42,r4=h*0.3;
+  ctx.strokeStyle=t.accent;ctx.lineWidth=3;ctx.globalAlpha=0.5;
+  ctx.beginPath();ctx.arc(cx3,cy3,r4,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle=t.text;ctx.lineWidth=1;ctx.globalAlpha=0.15;
+  ctx.beginPath();ctx.arc(cx3,cy3,r4*0.85,0,Math.PI*2);ctx.stroke();
+  // Needle
+  ctx.fillStyle='#ef4444';ctx.globalAlpha=0.8;
+  ctx.beginPath();ctx.moveTo(cx3,cy3-r4*0.7);ctx.lineTo(cx3-r4*0.1,cy3);ctx.lineTo(cx3+r4*0.1,cy3);ctx.closePath();ctx.fill();
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.6;
+  ctx.beginPath();ctx.moveTo(cx3,cy3+r4*0.7);ctx.lineTo(cx3-r4*0.1,cy3);ctx.lineTo(cx3+r4*0.1,cy3);ctx.closePath();ctx.fill();
+  // Center dot
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cx3,cy3,r4*0.06,0,Math.PI*2);ctx.fill();
+  // N/S
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.5;ctx.font=`bold ${h*0.05}px monospace`;ctx.textAlign='center';
+  ctx.fillText('N',cx3,cy3-r4-h*0.02);ctx.fillText('S',cx3,cy3+r4+h*0.05);
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Compass · Search',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Hourglass (Training Time / Patience) ──────────────────
+function artHourglass(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5,ty2=y+h*0.08,bw2=w*0.4,hh=h*0.72;
+  // Top frame
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.7;ctx.fillRect(cx3-bw2/2-w*0.04,ty2,bw2+w*0.08,h*0.04);
+  ctx.fillRect(cx3-bw2/2-w*0.04,ty2+hh-h*0.04,bw2+w*0.08,h*0.04);
+  // Top glass
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.4;
+  ctx.beginPath();ctx.moveTo(cx3-bw2/2,ty2+h*0.04);ctx.lineTo(cx3+bw2/2,ty2+h*0.04);
+  ctx.lineTo(cx3+w*0.04,ty2+hh*0.48);ctx.lineTo(cx3-w*0.04,ty2+hh*0.48);ctx.closePath();ctx.fill();
+  // Bottom glass
+  ctx.beginPath();ctx.moveTo(cx3-w*0.04,ty2+hh*0.52);ctx.lineTo(cx3+w*0.04,ty2+hh*0.52);
+  ctx.lineTo(cx3+bw2/2,ty2+hh-h*0.04);ctx.lineTo(cx3-bw2/2,ty2+hh-h*0.04);ctx.closePath();ctx.fill();
+  // Sand top
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.5;
+  ctx.beginPath();ctx.moveTo(cx3-bw2*0.35,ty2+h*0.15);ctx.lineTo(cx3+bw2*0.35,ty2+h*0.15);
+  ctx.lineTo(cx3+w*0.02,ty2+hh*0.46);ctx.lineTo(cx3-w*0.02,ty2+hh*0.46);ctx.closePath();ctx.fill();
+  // Sand bottom
+  ctx.beginPath();ctx.moveTo(cx3-bw2*0.35,ty2+hh-h*0.08);ctx.lineTo(cx3+bw2*0.35,ty2+hh-h*0.08);
+  ctx.lineTo(cx3+bw2/2,ty2+hh-h*0.04);ctx.lineTo(cx3-bw2/2,ty2+hh-h*0.04);ctx.closePath();ctx.fill();
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Hourglass · Training',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Lock (Encryption / Privacy / Frozen) ──────────────────
+function artLock(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5;
+  // Shackle
+  ctx.strokeStyle=t.accent;ctx.lineWidth=h*0.04;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cx3,y+h*0.28,w*0.15,Math.PI,0);ctx.stroke();
+  // Body
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.75;
+  rr(ctx,cx3-w*0.22,y+h*0.35,w*0.44,h*0.4,6);ctx.fill();
+  // Keyhole
+  ctx.fillStyle=t.dark;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cx3,y+h*0.5,h*0.04,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(cx3-h*0.015,y+h*0.52,h*0.03,h*0.1);
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Lock · Privacy · Frozen',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Tree (Decision Tree / Hierarchy) ──────────────────────
+function artTree(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5;
+  // Root node
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.8;
+  ctx.beginPath();ctx.arc(cx3,y+h*0.12,h*0.06,0,Math.PI*2);ctx.fill();
+  // Level 1
+  const l1=[[0.28,0.32],[0.72,0.32]];
+  l1.forEach(([nx,ny])=>{
+    ctx.fillStyle=t.win;ctx.globalAlpha=0.7;
+    ctx.beginPath();ctx.arc(x+w*nx,y+h*ny,h*0.05,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=t.accent;ctx.lineWidth=1.5;ctx.globalAlpha=0.4;
+    ctx.beginPath();ctx.moveTo(cx3,y+h*0.18);ctx.lineTo(x+w*nx,y+h*(ny-0.05));ctx.stroke();
+  });
+  // Level 2
+  const l2=[[0.12,0.52],[0.38,0.52],[0.62,0.52],[0.88,0.52]];
+  l2.forEach(([nx,ny],i)=>{
+    ctx.fillStyle=i%2===0?t.accent:t.win;ctx.globalAlpha=0.6;
+    ctx.beginPath();ctx.arc(x+w*nx,y+h*ny,h*0.045,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=t.accent;ctx.lineWidth=1;ctx.globalAlpha=0.3;
+    const parent=i<2?l1[0]:l1[1];
+    ctx.beginPath();ctx.moveTo(x+w*parent[0],y+h*(parent[1]+0.05));ctx.lineTo(x+w*nx,y+h*(ny-0.045));ctx.stroke();
+  });
+  // Level 3 (leaves)
+  const l3=[[0.06,0.7],[0.18,0.7],[0.32,0.7],[0.44,0.7],[0.56,0.7],[0.68,0.7],[0.82,0.7],[0.94,0.7]];
+  l3.forEach(([nx,ny],i)=>{
+    ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;
+    ctx.fillRect(x+w*nx-h*0.025,y+h*ny-h*0.025,h*0.05,h*0.05);
+    ctx.strokeStyle=t.accent;ctx.lineWidth=0.8;ctx.globalAlpha=0.2;
+    const parent=l2[Math.floor(i/2)];
+    ctx.beginPath();ctx.moveTo(x+w*parent[0],y+h*(parent[1]+0.045));ctx.lineTo(x+w*nx,y+h*(ny-0.025));ctx.stroke();
+  });
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Tree · Decision · Hierarchy',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Crane (Construction / Build / Architecture) ───────────
+function artCrane(ctx, x, y, w, h, t) {
+  // Tower
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.6;
+  ctx.fillRect(x+w*0.42,y+h*0.1,w*0.06,h*0.72);
+  // Arm
+  ctx.fillRect(x+w*0.15,y+h*0.1,w*0.55,h*0.04);
+  // Cable
+  ctx.strokeStyle=t.text;ctx.lineWidth=1.5;ctx.globalAlpha=0.4;
+  ctx.beginPath();ctx.moveTo(x+w*0.18,y+h*0.14);ctx.lineTo(x+w*0.18,y+h*0.45);ctx.stroke();
+  // Hook
+  ctx.strokeStyle=t.accent;ctx.lineWidth=2;ctx.globalAlpha=0.6;
+  ctx.beginPath();ctx.arc(x+w*0.18,y+h*0.48,h*0.03,0,Math.PI);ctx.stroke();
+  // Block being lifted
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.5;
+  rr(ctx,x+w*0.1,y+h*0.52,w*0.16,h*0.12,3);ctx.fill();
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.4;ctx.font=`${h*0.032}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Layer',x+w*0.18,y+h*0.6);
+  // Stacked blocks
+  for(let i=0;i<3;i++){
+    ctx.fillStyle=i===2?t.accent:t.win;ctx.globalAlpha=0.5+i*0.1;
+    rr(ctx,x+w*0.56,y+h*(0.68-i*0.14),w*0.16,h*0.12,3);ctx.fill();
+  }
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Crane · Architecture',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Dog (Loyal / Retrieval) ─────────────────────────
+function artDog(ctx, x, y, w, h, t) {
+  const grid=[
+    '..00.........00.',
+    '.0110.......011.',
+    '.01100000001100.',
+    '..011111111100..',
+    '..011111111100..',
+    '..011551155100..',
+    '..011001100100..',
+    '..011111111100..',
+    '..011131111100..',
+    '..011111111100..',
+    '...0111111100...',
+    '..022222222200..',
+    '..022222222200..',
+    '..022222222200..',
+    '..022002200200..',
+    '..020..020.020..',
+    '..000..000.000..',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#d4a574','2':'#92400e','3':'#1e293b','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Good Boy · Retrieval',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Bunny (Fast / Efficient) ────────────────────────
+function artBunny(ctx, x, y, w, h, t) {
+  const grid=[
+    '...00....00.....',
+    '...010..010.....',
+    '...010..010.....',
+    '...010..010.....',
+    '...010..010.....',
+    '..0111001110....',
+    '..0111111110....',
+    '..0115511550....',
+    '..0110011000....',
+    '..0111111110....',
+    '..0111111110....',
+    '...01111110.....',
+    '..022222222200..',
+    '..022222222200..',
+    '..022002200200..',
+    '..0200.020.00...',
+    '..000..000......',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.01,w,h*0.78,
+    {'0':t.dark,'1':'#e2e8f0','2':'#cbd5e1','3':t.accent,'5':'#f472b6'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Bunny · Fast Inference',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Whale (Big Data / Corpus) ───────────────────────
+function artWhale(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '.....000000.....',
+    '...0011111100...',
+    '..011111111110..',
+    '.01111111111110.',
+    '.01151111111110.',
+    '.01101111111110.',
+    '.01111111111110.',
+    '..011111111110..',
+    '..011111111100..',
+    '...011111110.00.',
+    '....0000000..020',
+    '.............00.',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.08,w,h*0.65,
+    {'0':t.dark,'1':'#60a5fa','2':'#93c5fd','3':t.accent,'5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Whale · Big Data',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Frog (Leap / Jump / Activation) ─────────────────
+function artFrog(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '..000......000..',
+    '.01510....01510.',
+    '.01010....01010.',
+    '.00011111110000.',
+    '..011111111100..',
+    '..011111111100..',
+    '..011111111100..',
+    '..011131311100..',
+    '..011111111100..',
+    '...0111111100...',
+    '..00.0000.0000..',
+    '.010.0..0.0.010.',
+    '.010.0..0.0.010.',
+    '.000.0..0.0.000.',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.04,w,h*0.74,
+    {'0':t.dark,'1':'#4ade80','2':'#166534','3':'#ef4444','5':'#fff'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Frog · Activation',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Panda (Balance / Black-White / Bias) ────────────
+function artPanda(ctx, x, y, w, h, t) {
+  const grid=[
+    '...00000000.....',
+    '..0111111110....',
+    '.011111111110...',
+    '.015501115500...',
+    '.010001110000...',
+    '.015501115500...',
+    '.011111111110...',
+    '.011113111110...',
+    '..0111111110....',
+    '..0022222200....',
+    '..0022222200....',
+    '..0050022050....',
+    '..0050022050....',
+    '..0000..0000....',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.04,w,h*0.74,
+    {'0':t.dark,'1':'#e2e8f0','2':'#334155','3':'#1e293b','5':'#1e293b'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Panda · Bias / Balance',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Unicorn (SOTA / Magic) ─────────────────────────
+function artUnicorn(ctx, x, y, w, h, t) {
+  const grid=[
+    '......30........',
+    '.....330........',
+    '....3300........',
+    '...0001100......',
+    '..011111100.....',
+    '..011511100.....',
+    '..011011100.....',
+    '..011111100.....',
+    '...01111100.....',
+    '..0222222200....',
+    '..0222222200....',
+    '..0222222200....',
+    '..0222222200....',
+    '..020020200200..',
+    '..000.000.0000..',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.02,w,h*0.78,
+    {'0':t.dark,'1':'#e2e8f0','2':'#c4b5fd','3':'#f472b6','5':'#475569'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Unicorn · SOTA',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Crab (Backward Pass / Backprop) ────────────────
+function artCrab(ctx, x, y, w, h, t) {
+  const grid=[
+    '0..............0',
+    '.0............0.',
+    '..0..000000..0..',
+    '..0.01111100.0..',
+    '..0.01511510.0..',
+    '...001001010.0..',
+    '...011111110....',
+    '...011111110....',
+    '...011131110....',
+    '....0000000.....',
+    '...00.0.0.00....',
+    '..00..0.0..00...',
+    '.00...0.0...00..',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.06,w,h*0.7,
+    {'0':t.dark,'1':'#f87171','2':'#991b1b','3':'#1e293b','5':'#fef08a'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Crab · Backprop',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Chameleon (Adaptation / Transfer) ──────────────
+function artChameleon(ctx, x, y, w, h, t) {
+  const grid=[
+    '................',
+    '.....000000.....',
+    '...0022222200...',
+    '..022222222220..',
+    '..025522222220..',
+    '..020022222220..',
+    '..022222222200..',
+    '...02222222200..',
+    '...02222200.0...',
+    '..0022220..00...',
+    '.033.0220.......',
+    '0330..00........',
+    '.00..............',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.06,w,h*0.68,
+    {'0':t.dark,'1':t.bg2,'2':'#4ade80','3':'#22c55e','5':'#fef08a'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.4;ctx.font=`${h*0.042}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Chameleon · Transfer',x+w/2,y+h*0.92);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Spider (Web / Crawler / Scraping) ──────────────
+function artSpider(ctx, x, y, w, h, t) {
+  // Web lines
+  const cx3=x+w*0.5,cy3=y+h*0.4;
+  ctx.strokeStyle=t.text;ctx.lineWidth=0.8;ctx.globalAlpha=0.15;
+  for(let a=0;a<8;a++){
+    const ang=a*Math.PI/4;
+    ctx.beginPath();ctx.moveTo(cx3,cy3);ctx.lineTo(cx3+Math.cos(ang)*w*0.42,cy3+Math.sin(ang)*h*0.38);ctx.stroke();
+  }
+  for(let r=1;r<=3;r++){
+    ctx.beginPath();ctx.arc(cx3,cy3,h*0.12*r,0,Math.PI*2);ctx.stroke();
+  }
+  // Spider body
+  const grid=[
+    '..0..0..',
+    '.0.00.0.',
+    '0.0110.0',
+    '..0110..',
+    '0.0550.0',
+    '.0.55.0.',
+    '..0..0..',
+  ];
+  drawPixelChar(ctx,grid,cx3-w*0.12,cy3-h*0.1,w*0.24,h*0.2,
+    {'0':t.dark,'1':'#475569','5':'#ef4444'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Spider · Web · Crawler',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Crown (SOTA / Leaderboard #1) ─────────────────
+function artCrown(ctx, x, y, w, h, t) {
+  const grid=[
+    '..0.....0.....0.',
+    '..00...00...00..',
+    '..030.0330.030..',
+    '..033.0330.030..',
+    '..033303330330..',
+    '..033333333330..',
+    '..033333333330..',
+    '..033333333330..',
+    '..033353533530..',
+    '..033333333330..',
+    '..000000000000..',
+  ];
+  drawPixelChar(ctx,grid,x,y+h*0.08,w,h*0.55,
+    {'0':t.dark,'1':t.bg2,'3':'#fbbf24','5':'#ef4444'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.55;ctx.font=`bold ${h*0.06}px monospace`;ctx.textAlign='center';
+  ctx.fillText('#1',x+w*0.5,y+h*0.82);
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;
+  ctx.fillText('Crown · SOTA',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Dice (Stochastic / Random / Sampling) ─────────
+function artDice(ctx, x, y, w, h, t) {
+  const sz=h*0.45, dx=x+w*0.2, dy=y+h*0.15;
+  // Face 1 (front)
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.7;ctx.fillRect(dx,dy,sz,sz);
+  ctx.strokeStyle=t.accent;ctx.lineWidth=2;ctx.globalAlpha=0.4;ctx.strokeRect(dx,dy,sz,sz);
+  // Dots
+  const dots=[[0.2,0.2],[0.5,0.2],[0.8,0.2],[0.2,0.8],[0.5,0.8],[0.8,0.8]];
+  dots.forEach(([px2,py2])=>{
+    ctx.fillStyle=t.dark;ctx.globalAlpha=0.7;
+    ctx.beginPath();ctx.arc(dx+sz*px2,dy+sz*py2,sz*0.07,0,Math.PI*2);ctx.fill();
+  });
+  // Face 2 (top - perspective)
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;
+  ctx.beginPath();ctx.moveTo(dx,dy);ctx.lineTo(dx+sz*0.3,dy-sz*0.25);
+  ctx.lineTo(dx+sz+sz*0.3,dy-sz*0.25);ctx.lineTo(dx+sz,dy);ctx.closePath();ctx.fill();
+  // Face 3 (right - perspective)
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.2;
+  ctx.beginPath();ctx.moveTo(dx+sz,dy);ctx.lineTo(dx+sz+sz*0.3,dy-sz*0.25);
+  ctx.lineTo(dx+sz+sz*0.3,dy+sz-sz*0.25);ctx.lineTo(dx+sz,dy+sz);ctx.closePath();ctx.fill();
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Dice · Stochastic',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Magnet (Attention / Attraction) ────────────────
+function artMagnet(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5;
+  // U shape
+  ctx.fillStyle='#ef4444';ctx.globalAlpha=0.75;
+  ctx.fillRect(cx3-w*0.28,y+h*0.1,w*0.12,h*0.5);
+  ctx.fillStyle='#3b82f6';ctx.globalAlpha=0.75;
+  ctx.fillRect(cx3+w*0.16,y+h*0.1,w*0.12,h*0.5);
+  // Bottom curve
+  ctx.strokeStyle=t.accent;ctx.lineWidth=w*0.12;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cx3,y+h*0.58,w*0.22,0,Math.PI);ctx.stroke();
+  // Tips (silver)
+  ctx.fillStyle='#94a3b8';ctx.globalAlpha=0.8;
+  ctx.fillRect(cx3-w*0.28,y+h*0.1,w*0.12,h*0.1);
+  ctx.fillRect(cx3+w*0.16,y+h*0.1,w*0.12,h*0.1);
+  // Field lines
+  ctx.strokeStyle=t.accent;ctx.lineWidth=1;ctx.globalAlpha=0.25;ctx.setLineDash([3,4]);
+  for(let i=0;i<4;i++){
+    const r5=w*0.08+i*w*0.06;
+    ctx.beginPath();ctx.arc(cx3,y+h*0.2,r5,Math.PI*0.15,Math.PI*0.85);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Magnet · Attraction',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Microscope (Analysis / Fine-grained) ──────────
+function artMicroscope(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.45;
+  // Eyepiece
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.5;
+  ctx.fillRect(cx3-w*0.04,y+h*0.06,w*0.08,h*0.08);
+  // Tube
+  ctx.fillStyle=t.win;ctx.globalAlpha=0.5;
+  ctx.fillRect(cx3-w*0.03,y+h*0.14,w*0.06,h*0.3);
+  // Objective
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.6;
+  ctx.fillRect(cx3-w*0.05,y+h*0.44,w*0.1,h*0.06);
+  // Stage
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.4;
+  ctx.fillRect(cx3-w*0.18,y+h*0.55,w*0.36,h*0.04);
+  // Slide (with specimen)
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.3;
+  ctx.fillRect(cx3-w*0.06,y+h*0.52,w*0.12,h*0.03);
+  // Base
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.4;
+  ctx.fillRect(cx3-w*0.02,y+h*0.59,w*0.04,h*0.15);
+  ctx.fillRect(cx3-w*0.2,y+h*0.74,w*0.4,h*0.04);
+  // Arm
+  ctx.fillStyle=t.text;ctx.globalAlpha=0.35;
+  ctx.fillRect(cx3+w*0.03,y+h*0.2,w*0.04,h*0.42);
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Microscope · Analysis',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Puzzle (Multi-piece / Assembly) ────────────────
+function artPuzzle(ctx, x, y, w, h, t) {
+  const colors=[t.accent,'#f97316','#22c55e','#a855f7'];
+  const pw2=w*0.3,ph2=h*0.28,gap=w*0.04;
+  const positions=[[0.12,0.15],[0.52,0.15],[0.12,0.48],[0.52,0.48]];
+  positions.forEach(([px2,py2],i)=>{
+    ctx.fillStyle=colors[i];ctx.globalAlpha=0.6;
+    rr(ctx,x+w*px2,y+h*py2,pw2,ph2,4);ctx.fill();
+    // Nub
+    if(i%2===0){ctx.fillStyle=colors[i];ctx.globalAlpha=0.6;
+      ctx.beginPath();ctx.arc(x+w*px2+pw2,y+h*py2+ph2/2,ph2*0.15,0,Math.PI*2);ctx.fill();}
+    if(i<2){ctx.fillStyle=colors[i];ctx.globalAlpha=0.6;
+      ctx.beginPath();ctx.arc(x+w*px2+pw2/2,y+h*py2+ph2,pw2*0.12,0,Math.PI*2);ctx.fill();}
+  });
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Puzzle · Assembly',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Ant (Colony / Parallel Workers) ────────────────
+function artAnt(ctx, x, y, w, h, t) {
+  const grid=[
+    '.....0...0......',
+    '......0.0.......',
+    '..0..00000......',
+    '..0.0111100.....',
+    '..00.011110.....',
+    '......01510.....',
+    '..00.011110.....',
+    '..0.0111100.....',
+    '..0..00000......',
+    '......0.0.......',
+    '.....0...0......',
+  ];
+  // Draw 3 ants in a line
+  drawPixelChar(ctx,grid,x-w*0.05,y+h*0.05,w*0.55,h*0.4,
+    {'0':t.dark,'1':'#78716c','2':'#44403c','5':'#ef4444'});
+  drawPixelChar(ctx,grid,x+w*0.2,y+h*0.32,w*0.55,h*0.4,
+    {'0':t.dark,'1':'#78716c','2':'#44403c','5':'#ef4444'});
+  drawPixelChar(ctx,grid,x+w*0.45,y+h*0.1,w*0.55,h*0.4,
+    {'0':t.dark,'1':'#78716c','2':'#44403c','5':'#ef4444'});
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Ants · Parallel Workers',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+// ─── Pixel Anchor (Grounding / RLHF Anchor) ──────────────
+function artAnchor(ctx, x, y, w, h, t) {
+  const cx3=x+w*0.5;
+  // Ring
+  ctx.strokeStyle=t.accent;ctx.lineWidth=3;ctx.globalAlpha=0.7;
+  ctx.beginPath();ctx.arc(cx3,y+h*0.15,h*0.07,0,Math.PI*2);ctx.stroke();
+  // Shaft
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.7;
+  ctx.fillRect(cx3-w*0.02,y+h*0.22,w*0.04,h*0.48);
+  // Cross bar
+  ctx.fillRect(cx3-w*0.14,y+h*0.38,w*0.28,h*0.04);
+  // Flukes (curved arms at bottom)
+  ctx.strokeStyle=t.accent;ctx.lineWidth=4;ctx.globalAlpha=0.6;
+  ctx.beginPath();ctx.arc(cx3-w*0.12,y+h*0.7,w*0.12,Math.PI*1.5,Math.PI*0.1);ctx.stroke();
+  ctx.beginPath();ctx.arc(cx3+w*0.12,y+h*0.7,w*0.12,Math.PI*0.9,Math.PI*1.5);ctx.stroke();
+  ctx.fillStyle=t.accent;ctx.globalAlpha=0.35;ctx.font=`${h*0.038}px monospace`;ctx.textAlign='center';
+  ctx.fillText('Anchor · Grounding',x+w*0.5,y+h*0.93);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
 // ─── ART REGISTRY ──────────────────────────────────────────
 const ARTS = [
   {id:'mlp',         name:'MLP',            fn:artMLP,         kw:['neural network','feedforward','perceptron','fully connected','dense','deep learning']},
@@ -2243,6 +3172,42 @@ const ARTS = [
   {id:'benchmark',   name:'Benchmark',      fn:artBenchmark,    kw:['benchmark','evaluation','mmlu','gsm8k','leaderboard','harness','score','comparison','arena']},
   {id:'federated',   name:'Federated',      fn:artFederated,    kw:['federated','federated learning','distributed','privacy','differential privacy','on-device','edge']},
   {id:'embedding',   name:'Embedding',      fn:artEmbedding,    kw:['embedding','t-sne','umap','representation','latent space','cluster','similarity','visualization']},
+  // ─── NEW 30 ARTS ───
+  {id:'owl',         name:'Wise Owl',       fn:artOwl,          kw:['pretrain','pretraining','knowledge','foundation','base model','corpus','gpt','llm']},
+  {id:'penguin',     name:'Penguin',        fn:artPenguin,      kw:['deploy','deployment','inference','serving','linux','production','mlops','onnx']},
+  {id:'fox',         name:'Fox',            fn:artFox,          kw:['optimizer','adam','sgd','learning rate','scheduler','warmup','cosine','gradient']},
+  {id:'octopus',     name:'Octopus',        fn:artOctopus,      kw:['multi-task','multitask','multi-head','multi-modal','joint','shared','hydra','multi']},
+  {id:'bee',         name:'Bee',            fn:artBee,          kw:['ensemble','swarm','boosting','bagging','voting','mixture','committee','aggregation']},
+  {id:'turtle',      name:'Turtle',         fn:artTurtle,       kw:['safety','alignment','slow','careful','guardrail','red team','jailbreak','robust']},
+  {id:'butterfly',   name:'Butterfly',      fn:artButterfly,    kw:['style transfer','neural style','transformation','artistic','image generation','nst']},
+  {id:'mushroom',    name:'Mushroom',       fn:artMushroom,     kw:['hallucination','uncertainty','calibration','confabulation','grounding','factuality']},
+  {id:'hamster',     name:'Hamster',        fn:artHamster,      kw:['small model','edge','mobile','tiny','phi','gemma','smollm','efficient','on-device']},
+  {id:'dragon',      name:'Dragon',         fn:artDragon,       kw:['large model','frontier','gpt-4','claude','gemini','llama','70b','405b','scaling']},
+  {id:'lightbulb',   name:'Eureka',         fn:artLightbulb,    kw:['emergent','idea','insight','eureka','capability','ability','in-context','icl']},
+  {id:'ghost',       name:'Ghost',          fn:artGhost,        kw:['hidden state','latent','invisible','representation','internal','feature','residual stream']},
+  {id:'telescope',   name:'Telescope',      fn:artTelescope,    kw:['long context','context window','128k','1m','rope','position','extrapolation','yarn']},
+  {id:'shield',      name:'Shield',         fn:artShield,       kw:['safety','guardrail','filter','moderation','content','policy','red team','defense']},
+  {id:'compass',     name:'Compass',        fn:artCompass,      kw:['search','navigation','retrieval','direction','guided','beam search','decode','strategy']},
+  {id:'hourglass',   name:'Hourglass',      fn:artHourglass,    kw:['training','time','patience','epoch','convergence','schedule','long training','pretrain']},
+  {id:'lock',        name:'Lock',           fn:artLock,         kw:['privacy','encryption','frozen','freeze','secure','confidential','differential privacy']},
+  {id:'decision_tree',name:'Decision Tree', fn:artTree,         kw:['decision tree','random forest','xgboost','gradient boosting','hierarchy','classification']},
+  {id:'crane',       name:'Crane',          fn:artCrane,        kw:['architecture','build','design','layer','block','module','stack','construct','nas']},
+  {id:'dog',         name:'Good Boy',       fn:artDog,          kw:['retrieval','fetch','retriever','search','document','recall','information retrieval']},
+  {id:'bunny',       name:'Bunny',          fn:artBunny,        kw:['fast','speed','efficient','inference','latency','throughput','optimization','quick']},
+  {id:'whale',       name:'Whale',          fn:artWhale,        kw:['big data','corpus','dataset','pile','common crawl','c4','pretraining data','web']},
+  {id:'frog',        name:'Frog',           fn:artFrog,         kw:['activation','relu','gelu','silu','swish','sigmoid','tanh','nonlinear','function']},
+  {id:'panda',       name:'Panda',          fn:artPanda,        kw:['bias','fairness','balance','debiasing','toxicity','stereotype','equity','ethics']},
+  {id:'unicorn',     name:'Unicorn',        fn:artUnicorn,      kw:['sota','state of the art','breakthrough','best','record','leaderboard','top','new']},
+  {id:'crab',        name:'Crab',           fn:artCrab,         kw:['backprop','backward','gradient','chain rule','autograd','differentiation','loss']},
+  {id:'chameleon',   name:'Chameleon',      fn:artChameleon,    kw:['transfer learning','adaptation','domain','finetune','pretrained','downstream','zero-shot']},
+  {id:'spider',      name:'Spider',         fn:artSpider,       kw:['web','crawler','scraping','data collection','internet','html','extraction','mining']},
+  {id:'crown',       name:'Crown',          fn:artCrown,        kw:['sota','winner','first place','champion','best','top-1','record','leaderboard']},
+  {id:'dice',        name:'Dice',           fn:artDice,         kw:['stochastic','random','sampling','temperature','top-p','nucleus','probability','noise']},
+  {id:'magnet',      name:'Magnet',         fn:artMagnet,       kw:['attention','attraction','magnetic','pull','similarity','affinity','cross-attention']},
+  {id:'microscope',  name:'Microscope',     fn:artMicroscope,   kw:['analysis','interpretability','probing','mechanistic','feature','visualization','explainability']},
+  {id:'puzzle',      name:'Puzzle',         fn:artPuzzle,       kw:['assembly','composition','modular','multi-step','planning','decomposition','task']},
+  {id:'ant',         name:'Ants',           fn:artAnt,          kw:['parallel','distributed','workers','data parallel','pipeline','tensor parallel','multi-gpu']},
+  {id:'anchor',      name:'Anchor',         fn:artAnchor,       kw:['grounding','grounded','factual','reference','citation','attribution','source','rag']},
 ].filter((a,i,arr)=>arr.findIndex(b=>b.id===a.id)===i); // dedupe
 
 // ─── STATE ─────────────────────────────────────────────────
